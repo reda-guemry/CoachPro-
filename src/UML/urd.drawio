@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Database Schema" id="database-schema">
-        <mxGraphModel dx="1820" dy="512" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
+        <mxGraphModel dx="1793" dy="490" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -97,7 +97,7 @@
                 <mxCell id="bookings-2" value="sportif_id INT FK NOT NULL" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="bookings-table" vertex="1">
                     <mxGeometry y="60" width="320" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="sportif_id INT FK NOT NULL" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="bookings-table">
+                <mxCell id="5" value="sportif_id INT FK NOT NULL" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="bookings-table" vertex="1">
                     <mxGeometry y="90" width="320" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="bookings-3" value="coach_id INT FK NOT NULL" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="bookings-table" vertex="1">
@@ -126,7 +126,7 @@
                 <mxCell id="reviews-3" value="rating INT NOT NULL" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="reviews-table" vertex="1">
                     <mxGeometry y="90" width="240" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="9" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.003;entryY=0.993;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.464;exitY=1.007;exitDx=0;exitDy=0;exitPerimeter=0;targetPerimeterSpacing=1;strokeColor=default;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="sports-2" target="coach-sports-1">
+                <mxCell id="9" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.003;entryY=0.993;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.464;exitY=1.007;exitDx=0;exitDy=0;exitPerimeter=0;targetPerimeterSpacing=1;strokeColor=default;edgeStyle=orthogonalEdgeStyle;" parent="1" source="sports-2" target="coach-sports-1" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
                         <mxPoint x="-460" y="200" as="sourcePoint"/>
                         <mxPoint x="-260" y="180" as="targetPoint"/>
@@ -135,19 +135,19 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="13" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.607;entryY=0.021;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="users-2" target="coach-sports-table">
+                <mxCell id="13" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.607;entryY=0.021;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;" parent="1" source="users-2" target="coach-sports-table" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
                         <mxPoint x="-439" y="180" as="sourcePoint"/>
                         <mxPoint x="-329" y="360" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="18" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="users-2" target="coach-profiles-table">
+                <mxCell id="18" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;" parent="1" source="users-2" target="coach-profiles-table" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
                         <mxPoint x="10" y="135" as="sourcePoint"/>
                         <mxPoint x="-184" y="302" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="19" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.629;entryY=-0.002;entryDx=0;entryDy=0;exitX=0.631;exitY=0.944;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="users-8" target="availabilities-table">
+                <mxCell id="19" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;entryX=0.629;entryY=-0.002;entryDx=0;entryDy=0;exitX=0.631;exitY=0.944;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;exitPerimeter=0;entryPerimeter=0;" parent="1" source="users-8" target="availabilities-table" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
                         <mxPoint x="250" y="135" as="sourcePoint"/>
                         <mxPoint x="530" y="180" as="targetPoint"/>
@@ -157,7 +157,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="20" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="users-7">
+                <mxCell id="20" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;targetPerimeterSpacing=1;edgeStyle=orthogonalEdgeStyle;" parent="1" source="users-7" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
                         <mxPoint x="161" y="328" as="sourcePoint"/>
                         <mxPoint x="-171" y="688" as="targetPoint"/>
@@ -168,13 +168,13 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="22" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0.446;exitY=1.01;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.998;entryY=-0.041;entryDx=0;entryDy=0;entryPerimeter=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="availabilities-6" target="bookings-3">
+                <mxCell id="22" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0.446;exitY=1.01;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.998;entryY=-0.041;entryDx=0;entryDy=0;entryPerimeter=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="availabilities-6" target="bookings-3" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
                         <mxPoint x="290" y="750" as="sourcePoint"/>
                         <mxPoint x="60" y="770" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="24" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0.451;exitY=0.987;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="bookings-6" target="reviews-table">
+                <mxCell id="24" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0.451;exitY=0.987;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="bookings-6" target="reviews-table" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
                         <mxPoint x="-100" y="1200" as="sourcePoint"/>
                         <mxPoint x="-110" y="1000" as="targetPoint"/>
