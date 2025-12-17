@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Sportif - CoachPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-dumbbell text-3xl text-purple-600 mr-3"></i>
+                    <span class="text-2xl font-bold text-gray-800">CoachPro</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-700 font-medium">Bonjour, <span id="userName">Sportif</span></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">Réservations</p>
+                        <p class="text-3xl font-bold text-purple-600" id="totalBookings">0</p>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-3">
+                        <i class="fas fa-calendar-check text-2xl text-purple-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">En Attente</p>
+                        <p class="text-3xl font-bold text-yellow-600" id="pendingBookings">0</p>
+                    </div>
+                    <div class="bg-yellow-100 rounded-full p-3">
+                        <i class="fas fa-clock text-2xl text-yellow-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">Acceptées</p>
+                        <p class="text-3xl font-bold text-green-600" id="acceptedBookings">0</p>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-3">
+                        <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">Coachs Disponibles</p>
+                        <p class="text-3xl font-bold text-blue-600" id="availableCoaches">0</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-3">
+                        <i class="fas fa-users text-2xl text-blue-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Coachs List -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-user-tie text-purple-600 mr-2"></i>Nos Coachs
+                    </h2>
+                    <div class="relative">
+                        <input type="text" id="searchCoach" placeholder="Rechercher..." class="pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Filter by Sport -->
+                <div class="mb-4">
+                    <select id="sportFilter" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                        <option value="">Tous les sports</option>
+                        <option value="Football">Football</option>
+                        <option value="Tennis">Tennis</option>
+                        <option value="Natation">Natation</option>
+                        <option value="Athlétisme">Athlétisme</option>
+                        <option value="Sports de combat">Sports de combat</option>
+                        <option value="Préparation physique">Préparation physique</option>
+                    </select>
+                </div>
+
+                <div id="coachsList" class="space-y-4 max-h-96 overflow-y-auto">
+                    <!-- Coach cards will be loaded here -->
+                </div>
+            </div>
+
+            <!-- My Bookings -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-calendar-alt text-purple-600 mr-2"></i>Mes Réservations
+                </h2>
+                <div id="bookingsList" class="space-y-4 max-h-96 overflow-y-auto">
+                    <!-- Bookings will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Réserver une séance</h3>
+                <button onclick="closeBookingModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="bookingForm">
+                <input type="hidden" id="selectedCoachId">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Coach</label>
+                    <p id="selectedCoachName" class="text-gray-600 font-medium"></p>
+                </div>
+                <div class="mb-4">
+                    <label for="bookingDate" class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-calendar mr-2 text-purple-600"></i>Date
+                    </label>
+                    <input type="date" id="bookingDate" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                </div>
+                <div class="mb-6">
+                    <label for="availabilitySelect" class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-clock mr-2 text-purple-600"></i>Créneau disponible
+                    </label>
+                    <select id="availabilitySelect" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                        <option value="">Sélectionnez d'abord une date</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300">
+                    <i class="fas fa-check mr-2"></i>Confirmer la réservation
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Laisser un avis</h3>
+                <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="reviewForm">
+                <input type="hidden" id="reviewBookingId">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-star mr-2 text-yellow-500"></i>Note
+                    </label>
+                    <div class="flex space-x-2" id="ratingStars">
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="1"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="2"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="3"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="4"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="ratingValue" required>
+                </div>
+                <div class="mb-6">
+                    <label for="reviewComment" class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-comment mr-2 text-purple-600"></i>Commentaire
+                    </label>
+                    <textarea id="reviewComment" rows="4" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600" placeholder="Partagez votre expérience..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300">
+                    <i class="fas fa-paper-plane mr-2"></i>Envoyer l'avis
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - Replace with actual API calls
+        let coaches = [
+            { id: 1, name: "Ahmed Benali", sport: "Football", experience: 10, photo: "https://via.placeholder.com/100", rating: 4.8, certifications: "UEFA B, CAF" },
+            { id: 2, name: "Sarah Alami", sport: "Tennis", experience: 8, photo: "https://via.placeholder.com/100", rating: 4.9, certifications: "FFT Niveau 2" },
+            { id: 3, name: "Karim El Idrissi", sport: "Natation", experience: 12, photo: "https://via.placeholder.com/100", rating: 4.7, certifications: "MNS, BEESAN" },
+            { id: 4, name: "Fatima Zahra", sport: "Préparation physique", experience: 6, photo: "https://via.placeholder.com/100", rating: 4.6, certifications: "BPJEPS AGFF" }
+        ];
+
+        let bookings = [
+            { id: 1, coach: "Ahmed Benali", date: "2025-12-20", time: "14:00-15:00", status: "pending" },
+            { id: 2, coach: "Sarah Alami", date: "2025-12-18", time: "10:00-11:00", status: "accepted" }
+        ];
+
+        // Load stats
+        function loadStats() {
+            document.getElementById('totalBookings').textContent = bookings.length;
+            document.getElementById('pendingBookings').textContent = bookings.filter(b => b.status === 'pending').length;
+            document.getElementById('acceptedBookings').textContent = bookings.filter(b => b.status === 'accepted').length;
+            document.getElementById('availableCoaches').textContent = coaches.length;
+        }
+
+        // Load coaches
+        function loadCoaches(filter = '') {
+            const coachsList = document.getElementById('coachsList');
+            const filteredCoaches = filter ? coaches.filter(c => c.sport === filter) : coaches;
+            
+            coachsList.innerHTML = filteredCoaches.map(coach => `
+                <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-600 transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <img src="${coach.photo}" alt="${coach.name}" class="w-20 h-20 rounded-full object-cover">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800">${coach.name}</h3>
+                            <p class="text-sm text-gray-600"><i class="fas fa-trophy text-purple-600 mr-1"></i>${coach.sport}</p>
+                            <p class="text-sm text-gray-600"><i class="fas fa-certificate text-purple-600 mr-1"></i>${coach.certifications}</p>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                <span class="text-sm font-semibold">${coach.rating}</span>
+                                <span class="text-sm text-gray-500 ml-2">${coach.experience} ans d'exp.</span>
+                            </div>
+                        </div>
+                        <button onclick="openBookingModal(${coach.id}, '${coach.name}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
+                            <i class="fas fa-calendar-plus mr-1"></i>Réserver
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load bookings
+        function loadBookings() {
+            const bookingsList = document.getElementById('bookingsList');
+            
+            if (bookings.length === 0) {
+                bookingsList.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune réservation</p>';
+                return;
+            }
+
+            bookingsList.innerHTML = bookings.map(booking => {
+                const statusColors = {
+                    pending: 'bg-yellow-100 text-yellow-800',
+                    accepted: 'bg-green-100 text-green-800',
+                    rejected: 'bg-red-100 text-red-800',
+                    cancelled: 'bg-gray-100 text-gray-800'
+                };
+                const statusText = {
+                    pending: 'En attente',
+                    accepted: 'Acceptée',
+                    rejected: 'Refusée',
+                    cancelled: 'Annulée'
+                };
+
+                return `
+                    <div class="border-2 border-gray-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-gray-800">${booking.coach}</h4>
+                            <span class="px-2 py-1 rounded text-xs font-semibold ${statusColors[booking.status]}">${statusText[booking.status]}</span>
+                        </div>
+                        <p class="text-sm text-gray-600"><i class="fas fa-calendar mr-1"></i>${booking.date}</p>
+                        <p class="text-sm text-gray-600"><i class="fas fa-clock mr-1"></i>${booking.time}</p>
+                        <div class="flex space-x-2 mt-3">
+                            ${booking.status === 'accepted' ? `
+                                <button onclick="openReviewModal(${booking.id})" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs transition duration-300">
+                                    <i class="fas fa-star mr-1"></i>Avis
+                                </button>
+                            ` : ''}
+                            ${booking.status === 'pending' || booking.status === 'accepted' ? `
+                                <button onclick="cancelBooking(${booking.id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition duration-300">
+                                    <i class="fas fa-times mr-1"></i>Annuler
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Booking Modal
+        function openBookingModal(coachId, coachName) {
+            document.getElementById('selectedCoachId').value = coachId;
+            document.getElementById('selectedCoachName').textContent = coachName;
+            document.getElementById('bookingModal').classList.remove('hidden');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').setAttribute('min', today);
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+            document.getElementById('bookingForm').reset();
+        }
+
+        // Load availabilities when date changes
+        document.getElementById('bookingDate').addEventListener('change', function() {
+            const coachId = document.getElementById('selectedCoachId').value;
+            const date = this.value;
+            
+            // Simulated availabilities - Replace with API call
+            const availabilities = [
+                { id: 1, time: '09:00-10:00' },
+                { id: 2, time: '10:00-11:00' },
+                { id: 3, time: '14:00-15:00' },
+                { id: 4, time: '15:00-16:00' }
+            ];
+
+            const select = document.getElementById('availabilitySelect');
+            select.innerHTML = availabilities.map(a => 
+                `<option value="${a.id}">${a.time}</option>`
+            ).join('');
+        });
+
+        // Submit booking
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const coachId = document.getElementById('selectedCoachId').value;
+            const coachName = document.getElementById('selectedCoachName').textContent;
+            const date = document.getElementById('bookingDate').value;
+            const availabilityId = document.getElementById('availabilitySelect').value;
+            const timeSlot = document.getElementById('availabilitySelect').options[document.getElementById('availabilitySelect').selectedIndex].text;
+
+            // Add booking (Replace with API call)
+            bookings.push({
+                id: bookings.length + 1,
+                coach: coachName,
+                date: date,
+                time: timeSlot,
+                status: 'pending'
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Réservation envoyée!',
+                text: 'Votre demande a été envoyée au coach.',
+                confirmButtonColor: '#7c3aed'
+            });
+
+            closeBookingModal();
+            loadBookings();
+            loadStats();
+        });
+
+        // Review Modal
+        function openReviewModal(bookingId) {
+            document.getElementById('reviewBookingId').value = bookingId;
+            document.getElementById('reviewModal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+            document.getElementById('reviewForm').reset();
+            document.querySelectorAll('#ratingStars i').forEach(star => {
+                star.classList.remove('text-yellow-500');
+                star.classList.add('text-gray-300');
+            });
+        }
+
+        // Rating stars
+        document.querySelectorAll('#ratingStars i').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                document.getElementById('ratingValue').value = rating;
+                
+                document.querySelectorAll('#ratingStars i').forEach(s => {
+                    s.classList.remove('text-yellow-500');
+                    s.classList.add('text-gray-300');
+                });
+                
+                for (let i = 0; i < rating; i++) {
+                    document.querySelectorAll('#ratingStars i')[i].classList.remove('text-gray-300');
+                    document.querySelectorAll('#ratingStars i')[i].classList.add('text-yellow-500');
+                }
+            });
+        });
+
+        // Submit review
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const rating = document.getElementById('ratingValue').value;
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!rating) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Veuillez sélectionner une note',
+                    confirmButtonColor: '#7c3aed'
+                });
+                return;
+            }
+
+            // Submit review (Replace with API call)
+            Swal.fire({
+                icon: 'success',
+                title: 'Merci!',
+                text: 'Votre avis a été enregistré.',
+                confirmButtonColor: '#7c3aed'
+            });
+
+            closeReviewModal();
+        });
+
+        // Cancel booking
+        function cancelBooking(bookingId) {
+            Swal.fire({
+                title: 'Confirmer l\'annulation?',
+                text: "Cette action est irréversible",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Oui, annuler',
+                cancelButtonText: 'Non'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const index = bookings.findIndex(b => b.id === bookingId);
+                    if (index > -1) {
+                        bookings[index].status = 'cancelled';
+                        loadBookings();
+                        loadStats();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Annulée!',
+                            text: 'La réservation a été annulée.',
+                            confirmButtonColor: '#7c3aed'
+                        });
+                    }
+                }
+            });
+        }
+
+        // Search and filter
+        document.getElementById('searchCoach').addEventListener('input', function(e) {
+            const search = e.target.value.toLowerCase();
+            const filtered = coaches.filter(c => 
+                c.name.toLowerCase().includes(search) || 
+                c.sport.toLowerCase().includes(search)
+            );
+            
+            const coachsList = document.getElementById('coachsList');
+            coachsList.innerHTML = filtered.map(coach => `
+                <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-600 transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <img src="${coach.photo}" alt="${coach.name}" class="w-20 h-20 rounded-full object-cover">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800">${coach.name}</h3>
+                            <p class="text-sm text-gray-600"><i class="fas fa-trophy text-purple-600 mr-1"></i>${coach.sport}</p>
+                            <p class="text-sm text-gray-600"><i class="fas fa-certificate text-purple-600 mr-1"></i>${coach.certifications}</p>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                <span class="text-sm font-semibold">${coach.rating}</span>
+                                <span class="text-sm text-gray-500 ml-2">${coach.experience} ans d'exp.</span>
+                            </div>
+                        </div>
+                        <button onclick="openBookingModal(${coach.id}, '${coach.name}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
+                            <i class="fas fa-calendar-plus mr-1"></i>Réserver
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        });
+
+        document.getElementById('sportFilter').addEventListener('change', function() {
+            loadCoaches(this.value);
+        });
+
+        // Logout
+        function logout() {
+            Swal.fire({
+                title: 'Déconnexion',
+                text: "Voulez-vous vous déconnecter?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#7c3aed',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Oui',
+                cancelButtonText: 'Non'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        // Initialize
+        loadStats();
+        loadCoaches();
+        loadBookings();
+    </script>
+</body>
+</html>
