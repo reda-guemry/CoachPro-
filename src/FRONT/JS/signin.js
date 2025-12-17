@@ -67,7 +67,6 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
     const prenom = document.getElementById('prenom').value.trim();
     const nom = document.getElementById('nom').value.trim();
     const email = document.getElementById('email').value.trim();
-    const telephone = document.getElementById('telephone').value.trim();
     const password = document.getElementById('password').value ;
     const confirmPassword = document.getElementById('confirmPassword').value ;
     const BioCoach = document.getElementById("bio").value ; 
@@ -78,7 +77,6 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
     
     const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     
     let isValid = true;
@@ -100,11 +98,7 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
         isValid = false;
     }
     
-    if (!phoneRegex.test(telephone)) {
-        document.getElementById('telephoneError').classList.remove('hidden');
-        isValid = false;
-    }
-    
+   
     if (!passwordRegex.test(password)) {
         document.getElementById('passwordError').classList.remove('hidden');
         isValid = false;
@@ -126,7 +120,6 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
         datauser.append("prenom", prenom);
         datauser.append("nom", nom);
         datauser.append("email", email);
-        datauser.append("telephone", telephone);
         datauser.append("password", password);
         datauser.append("confirmPassword", confirmPassword);
         datauser.append("role", Roleuser); 

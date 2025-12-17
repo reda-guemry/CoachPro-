@@ -1,14 +1,24 @@
 <?php 
 
+    include("connectdatabass.php") ; 
+
     $prenom = $_POST["prenom"] ;
     $nom = $_POST["nom"] ;
-    $email = $_POST["email"] ; 
-    $telephone = $_POST["telephone"] ; 
-    $password = $_POST["password"] ; 
+    $email = $_POST["email"] ;  
+    $password = $_POST["password"]; 
     $confirmPassword = $_POST["confirmPassword"] ; 
-    $role = $_POST["role"] ; 
+    $role = $_POST["role"] ;
 
+    if ($_POST["password"] !== $_POST["confirmPassword"]) {
+        die("Password does not match the confirmation password.");
+    }
+
+    $password = password_hash($password  , PASSWORD_DEFAULT); 
+
+    $insertuserprepar = $connect -> prepare('INSERT INTO users (first_name , last_name , email , password , role) VALUE ( ? , ? , ? , ? , ?)') ;
+    $insertuserprepar -> execute([$prenom , $nom , $email , $password , $role]) ;
     
+    $selectUser = $connect -> lastInsertId() ;
 
     if($role == "coach") {
         $BioCoach = $_POST["BioCoach"] ; 
@@ -19,7 +29,8 @@
             $nameProfilePhoto =  $_FILES["profilePhoto"]["name"] ; 
             $uploadDirectionProfile = "../../FRONT/IMG/PROFILESPHOTO/" . $nameProfilePhoto ;
             move_uploaded_file( $_FILES["profilePhoto"]["tmp_name"] , $uploadDirectionProfile) ;
-            $profilePhotoPath = '../IMG/PROFILESPHOTO/' + $nameProfilePhoto ; 
+            chmod($uploadDirectionProfile, 0777);
+            $profilePhotoPath = '../IMG/PROFILESPHOTO/' . $nameProfilePhoto ; 
         }
 
         $certificatePhotoPath = '';
@@ -27,6 +38,13 @@
             $nameCertifPhoto = $_FILES["certificate"]["name"] ; 
             $uploadDirectionCertif = "../../FRONT/IMG/CERTIFICATEPHOTO/" . $nameCertifPhoto ;
             move_uploaded_file($_FILES["certificate"]["tmp_name"] , $uploadDirectionCertif) ; 
+            chmod($uploadDirectionCertif, 0777);
             $certificatePhotoPath = '../IMG/CERTIFICATEPHOTO/' . $nameCertifPhoto ; 
         }
+
+        $insertcoashprepare = $connect -> prepare('INSERT INTO coach_profile (coach_id , bio , experience_year , certification , photo) VALUE ( ? , ? , ? , ? , ?)') ; 
+        $insertcoashprepare -> execute([$selectUser , $BioCoach , $experiencecoach , $profilePhotoPath , $certificatePhotoPath]) ; 
+
     }
+
+    echo "T9DA LGHARAD" ; 
