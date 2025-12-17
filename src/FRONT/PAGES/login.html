@@ -13,7 +13,7 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
-        <!-- Logo and Title -->
+
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4 shadow-lg">
                 <i class="fas fa-dumbbell text-3xl text-purple-600"></i>
@@ -22,10 +22,8 @@
             <p class="text-purple-200">Connectez-vous à votre compte</p>
         </div>
 
-        <!-- Login Form Card -->
         <div class="bg-white rounded-2xl shadow-2xl p-8">
             <form id="loginForm" method="POST" action="login.php">
-                <!-- Email Field -->
                 <div class="mb-6">
                     <label for="email" class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-envelope mr-2 text-purple-600"></i>Email
@@ -41,7 +39,6 @@
                     <span class="text-red-500 text-sm hidden" id="emailError">Email invalide</span>
                 </div>
 
-                <!-- Password Field -->
                 <div class="mb-6">
                     <label for="password" class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-lock mr-2 text-purple-600"></i>Mot de passe
@@ -66,18 +63,16 @@
                     <span class="text-red-500 text-sm hidden" id="passwordError">Mot de passe requis</span>
                 </div>
 
-                <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between mb-6">
                     <label class="flex items-center">
                         <input type="checkbox" name="remember" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
                         <span class="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
                     </label>
-                    <a href="forgot-password.php" class="text-sm text-purple-600 hover:text-purple-800 font-medium">
+                    <a href="#" class="text-sm text-purple-600 hover:text-purple-800 font-medium">
                         Mot de passe oublié?
                     </a>
                 </div>
 
-                <!-- Submit Button -->
                 <button 
                     type="submit" 
                     class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transform hover:scale-105 transition duration-300 shadow-lg"
@@ -86,82 +81,27 @@
                 </button>
             </form>
 
-            <!-- Divider -->
             <div class="flex items-center my-6">
                 <div class="flex-1 border-t border-gray-300"></div>
                 <span class="px-4 text-gray-500 text-sm">ou</span>
                 <div class="flex-1 border-t border-gray-300"></div>
             </div>
 
-            <!-- Sign Up Link -->
             <div class="text-center">
                 <p class="text-gray-600">
                     Vous n'avez pas de compte?
-                    <a href="signup.html" class="text-purple-600 hover:text-purple-800 font-bold">
+                    <a href="signin.html" class="text-purple-600 hover:text-purple-800 font-bold">
                         Inscrivez-vous
                     </a>
                 </p>
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="text-center mt-6 text-white text-sm">
             <p>&copy; 2025 CoachPro. Tous droits réservés.</p>
         </div>
     </div>
 
-    <script>
-        // Toggle Password Visibility
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const password = document.getElementById('password');
-            const icon = this.querySelector('i');
-            
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-
-        // Form Validation
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const emailError = document.getElementById('emailError');
-            const passwordError = document.getElementById('passwordError');
-            
-            // Email Regex Validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            let isValid = true;
-            
-            // Reset errors
-            emailError.classList.add('hidden');
-            passwordError.classList.add('hidden');
-            
-            // Validate Email
-            if (!emailRegex.test(email)) {
-                emailError.classList.remove('hidden');
-                isValid = false;
-            }
-            
-            // Validate Password
-            if (password.length < 6) {
-                passwordError.textContent = 'Le mot de passe doit contenir au moins 6 caractères';
-                passwordError.classList.remove('hidden');
-                isValid = false;
-            }
-            
-            if (isValid) {
-                // Submit form
-                this.submit();
-            }
-        });
-    </script>
+    <script src="../JS/logine.js"></script>
 </body>
 </html>
