@@ -39,10 +39,9 @@ function togglePasswordVisibility(input, icon) {
 function signinfetch(datajson) {
     fetch("../../BACK/API/signin.php" , {
             method : "POST" , 
-            headers : {'Content-type': 'application/json'} , 
-            body : JSON.stringify(datajson)
+            body : datajson
         })
-        .then(rep => rep.json())
+        .then(rep => rep.text())
         .then(data => console.log(data))
         .catch(eroor => console.log(eroor))
 }
@@ -60,16 +59,22 @@ document.getElementById('toggleConfirmPassword').addEventListener('click', funct
 });
 
 
-document.getElementById('signupForm').addEventListener('submit', function(e) {
+document.getElementById('signupForm').addEventListener('submit', (e) => {
     e.preventDefault();
+
     
+    const Roleuser = document.querySelector('input[name="role"]:checked').value;
     const prenom = document.getElementById('prenom').value.trim();
     const nom = document.getElementById('nom').value.trim();
     const email = document.getElementById('email').value.trim();
     const telephone = document.getElementById('telephone').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const terms = document.getElementById('terms').checked;
+    const password = document.getElementById('password').value ;
+    const confirmPassword = document.getElementById('confirmPassword').value ;
+    const BioCoach = document.getElementById("bio").value ; 
+    const experiencecoach = document.getElementById("experienceYears").value ;
+    const profilePhoto = document.getElementById("photo").files[0] ; 
+    const certificate = document.getElementById("certifications").files[0] ; 
+    const terms = document.getElementById('terms').checked ;
     
     const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -116,17 +121,24 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     }
     
     if (isValid) {
-        if(roleInputs == "sportif") { 
-            const dataform = {
-                prenom , 
-                nom , 
-                email , 
-                telephone , 
-                password ,
-                confirmPassword 
-            }
-            signinfetch(dataform) ;
-        }else if (roleInputs == "coach")
+        const datauser = new FormData() ;
+
+        datauser.append("prenom", prenom);
+        datauser.append("nom", nom);
+        datauser.append("email", email);
+        datauser.append("telephone", telephone);
+        datauser.append("password", password);
+        datauser.append("confirmPassword", confirmPassword);
+        datauser.append("role", Roleuser); 
+        
+        if (Roleuser == "coach") {
+            datauser.append("BioCoach" , BioCoach) ; 
+            datauser.append("experiencecoach" , experiencecoach) ; 
+            datauser.append("profilePhoto" , profilePhoto) ;
+            datauser.append("certificate" , certificate) ;
+        }
+
+        signinfetch(datauser);
     }
 
 });
