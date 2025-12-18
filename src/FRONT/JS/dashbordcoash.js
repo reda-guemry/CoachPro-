@@ -2,54 +2,37 @@
 function getallavai() {  
     fetch("../../BACK/API/getallavaili.php")
         .then(rep => rep.json())
-        .then(data => data.status == "success" ? loadAvailabilities(data.datainsert) : console.log(data))
+        .then(data => {  
+            loadAvailabilities(data.datainsert);
+            loadStats(data);  
+        })
         .catch(error =>console.error(error))
 }
 
 function getallpendigres() {
     fetch("../../BACK/API/getallpendres.php")
         .then(rep => rep.json())
-        .then(data => loadPendingRequests(data))
+        .then(data =>{
+            loadPendingRequests(data)
+        })
         .catch(error =>console.error(error))
 }
 
-// Sample data - Replace with actual API calls
-// let bookingRequests = [
-//     { id: 1, sportif: "Youssef Amrani", date: "2025-12-20", time: "14:00-15:00", status: "pending", sportif_id: 1 },
-//     { id: 2, sportif: "Amina Benkirane", date: "2025-12-21", time: "10:00-11:00", status: "pending", sportif_id: 2 }
-// ];
-
-// let acceptedSessions = [
-//     { id: 3, sportif: "Omar Tazi", date: "2025-12-18", time: "09:00-10:00", status: "accepted" },
-//     { id: 4, sportif: "Leila Mahjoub", date: "2025-12-19", time: "15:00-16:00", status: "accepted" }
-// ];
-
-// let availabilities = [
-//     { id: 1, date: "2025-12-20", start: "09:00", end: "10:00", status: "available" },
-//     { id: 2, date: "2025-12-20", start: "14:00", end: "15:00", status: "booked" },
-//     { id: 3, date: "2025-12-21", start: "10:00", end: "11:00", status: "available" }
-// ];
-
-// let reviews = [
-//     { id: 1, sportif: "Hassan Alami", rating: 5, comment: "Excellent coach! Très professionnel.", date: "2025-12-10" },
-//     { id: 2, sportif: "Sara Idrissi", rating: 4, comment: "Bon entraînement, je recommande.", date: "2025-12-08" }
-// ];
-
 // Load stats
-function loadStats() {
-    document.getElementById('pendingRequests').textContent = bookingRequests.filter(b => b.status === 'pending').length;
+function loadStats(data) {
+    document.getElementById('pendingRequests').textContent = data.filter(b => b.status === 'pending').length;
     
     const today = new Date().toISOString().split('T')[0];
     const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
     
-    document.getElementById('todaySessions').textContent = acceptedSessions.filter(s => s.date === today).length;
-    document.getElementById('tomorrowSessions').textContent = acceptedSessions.filter(s => s.date === tomorrow).length;
+    document.getElementById('todaySessions').textContent = data.filter(s => s.availabilites_date === today).length;
+    document.getElementById('tomorrowSessions').textContent = data.filter(s => s.availabilites_date === tomorrow).length;
     
-    const avgRating = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
-    document.getElementById('averageRating').textContent = avgRating;
+    // const avgRating = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
+    // document.getElementById('averageRating').textContent = avgRating;
 
     // Show next session
-    const nextSession = acceptedSessions.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+    const nextSession = data.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
     if (nextSession) {
         document.getElementById('nextSessionAlert').classList.remove('hidden');
         document.getElementById('nextSessionInfo').textContent = `${nextSession.sportif} - ${nextSession.date} à ${nextSession.time}`;
@@ -343,7 +326,7 @@ function deleteAvailability(availId) {
             fetch("../../BACK/API/deletavailibilter.php" , {
                 method : "POST", 
                 headers : { "Content-Type": "application/json"} , 
-                body : JSON.stringify({ bookingId: bookingId })
+                body : JSON.stringify({ availId: availId })
             })
                 .then(rep => rep.text())
                 .then(data => {
