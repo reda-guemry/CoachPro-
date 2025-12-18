@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Coach - CoachPro</title>
+    <title>Dashboard Sportif - CoachPro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -23,9 +23,7 @@
                     <span class="text-2xl font-bold text-gray-800">CoachPro</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="dashbordcoach.html" class="text-gray-700 hover:text-purple-600 font-medium transition duration-300">
-                        <i class="fas fa-arrow-left mr-1"></i>Retour au Dashboard
-                    </a>
+                    <span class="text-gray-700 font-medium">Bonjour, <span id="userName">Sportif</span></span>
                     <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-300">
                         <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
                     </button>
@@ -34,414 +32,459 @@
         </div>
     </nav>
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Profile Header -->
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
-            <div class="flex items-center space-x-6">
-                <div class="relative">
-                    <img id="profilePhoto" src="https://via.placeholder.com/150" alt="Photo de profil" class="w-32 h-32 rounded-full object-cover border-4 border-purple-600">
-                    <button onclick="document.getElementById('photoInput').click()" class="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white rounded-full p-2 transition duration-300">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                    <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(event)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">Réservations</p>
+                        <p class="text-3xl font-bold text-purple-600" id="totalBookings">0</p>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-3">
+                        <i class="fas fa-calendar-check text-2xl text-purple-600"></i>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <h1 class="text-3xl font-bold text-gray-800" id="displayName">Nom du Coach</h1>
-                    <p class="text-gray-600" id="displayEmail">email@example.com</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                        <span class="text-lg font-semibold" id="displayRating">4.8</span>
-                        <span class="text-gray-500 ml-2">(<span id="displayReviews">24</span> avis)</span>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">En Attente</p>
+                        <p class="text-3xl font-bold text-yellow-600" id="pendingBookings">0</p>
+                    </div>
+                    <div class="bg-yellow-100 rounded-full p-3">
+                        <i class="fas fa-clock text-2xl text-yellow-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">Acceptées</p>
+                        <p class="text-3xl font-bold text-green-600" id="acceptedBookings">0</p>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-3">
+                        <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-semibold">Coachs Disponibles</p>
+                        <p class="text-3xl font-bold text-blue-600" id="availableCoaches">0</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-3">
+                        <i class="fas fa-users text-2xl text-blue-600"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Profile Form -->
-        <div class="bg-white rounded-xl shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-user-edit text-purple-600 mr-2"></i>Informations du Profil
-            </h2>
-
-            <form id="profileForm">
-                <!-- Personal Information -->
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b-2 border-purple-600 pb-2">
-                        <i class="fas fa-user mr-2"></i>Informations Personnelles
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="firstName" class="block text-gray-700 font-semibold mb-2">Prénom</label>
-                            <input type="text" id="firstName" name="firstName" value="Ahmed" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
-                        </div>
-                        <div>
-                            <label for="lastName" class="block text-gray-700 font-semibold mb-2">Nom</label>
-                            <input type="text" id="lastName" name="lastName" value="Benali" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
-                        </div>
-                        <div>
-                            <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
-                            <input type="email" id="email" name="email" value="ahmed.benali@example.com" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
-                        </div>
-                        <div>
-                            <label for="phone" class="block text-gray-700 font-semibold mb-2">Téléphone</label>
-                            <input type="tel" id="phone" name="phone" value="06 12 34 56 78" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
-                        </div>
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Coachs List -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-user-tie text-purple-600 mr-2"></i>Nos Coachs
+                    </h2>
+                    <div class="relative">
+                        <input type="text" id="searchCoach" placeholder="Rechercher..." class="pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
                 </div>
 
-                <!-- Professional Information -->
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b-2 border-purple-600 pb-2">
-                        <i class="fas fa-briefcase mr-2"></i>Informations Professionnelles
-                    </h3>
-                    
-                    <!-- Biography -->
-                    <div class="mb-6">
-                        <label for="bio" class="block text-gray-700 font-semibold mb-2">
-                            <i class="fas fa-align-left text-purple-600 mr-2"></i>Biographie
-                        </label>
-                        <textarea id="bio" name="bio" rows="6" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600" placeholder="Présentez-vous, parlez de votre parcours...">Coach professionnel avec 10 ans d'expérience dans le football. Passionné par le développement des jeunes talents et l'amélioration des performances sportives.</textarea>
-                        <p class="text-sm text-gray-500 mt-1">
-                            <span id="bioCount">0</span>/500 caractères
-                        </p>
-                    </div>
-
-                    <!-- Experience Years -->
-                    <div class="mb-6">
-                        <label for="experienceYears" class="block text-gray-700 font-semibold mb-2">
-                            <i class="fas fa-calendar-alt text-purple-600 mr-2"></i>Années d'Expérience
-                        </label>
-                        <input type="number" id="experienceYears" name="experienceYears" value="10" min="0" max="50" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
-                    </div>
-
-                    <!-- Certifications -->
-                    <div class="mb-6">
-                        <label for="certifications" class="block text-gray-700 font-semibold mb-2">
-                            <i class="fas fa-certificate text-purple-600 mr-2"></i>Certifications
-                        </label>
-                        <input type="text" id="certifications" name="certifications" value="UEFA B, CAF, BPJEPS" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600" placeholder="Ex: UEFA B, BPJEPS, etc.">
-                        <p class="text-sm text-gray-500 mt-1">Séparez les certifications par des virgules</p>
-                    </div>
-
-                    <!-- Sports Specialties -->
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-semibold mb-3">
-                            <i class="fas fa-trophy text-purple-600 mr-2"></i>Disciplines Sportives
-                        </label>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
-                                <input type="checkbox" name="sports" value="football" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500" checked>
-                                <span class="ml-3 text-gray-700">Football</span>
-                            </label>
-                            <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
-                                <input type="checkbox" name="sports" value="tennis" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
-                                <span class="ml-3 text-gray-700">Tennis</span>
-                            </label>
-                            <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
-                                <input type="checkbox" name="sports" value="natation" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
-                                <span class="ml-3 text-gray-700">Natation</span>
-                            </label>
-                            <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
-                                <input type="checkbox" name="sports" value="athletisme" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
-                                <span class="ml-3 text-gray-700">Athlétisme</span>
-                            </label>
-                            <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
-                                <input type="checkbox" name="sports" value="combat" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
-                                <span class="ml-3 text-gray-700">Sports de combat</span>
-                            </label>
-                            <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
-                                <input type="checkbox" name="sports" value="preparation" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
-                                <span class="ml-3 text-gray-700">Préparation physique</span>
-                            </label>
-                        </div>
-                        <span class="text-red-500 text-sm hidden" id="sportsError">Veuillez sélectionner au moins une discipline</span>
-                    </div>
+                <!-- Filter by Sport -->
+                <div class="mb-4">
+                    <select id="sportFilter" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                        <option value="">Tous les sports</option>
+                        <option value="Football">Football</option>
+                        <option value="Tennis">Tennis</option>
+                        <option value="Natation">Natation</option>
+                        <option value="Athlétisme">Athlétisme</option>
+                        <option value="Sports de combat">Sports de combat</option>
+                        <option value="Préparation physique">Préparation physique</option>
+                    </select>
                 </div>
 
-                <!-- Change Password Section -->
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b-2 border-purple-600 pb-2">
-                        <i class="fas fa-lock mr-2"></i>Changer le Mot de Passe
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="currentPassword" class="block text-gray-700 font-semibold mb-2">Mot de passe actuel</label>
-                            <input type="password" id="currentPassword" name="currentPassword" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600" placeholder="••••••••">
-                        </div>
-                        <div></div>
-                        <div>
-                            <label for="newPassword" class="block text-gray-700 font-semibold mb-2">Nouveau mot de passe</label>
-                            <input type="password" id="newPassword" name="newPassword" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600" placeholder="••••••••">
-                            <span class="text-red-500 text-sm hidden" id="passwordError">Min. 8 caractères, 1 majuscule, 1 chiffre</span>
-                        </div>
-                        <div>
-                            <label for="confirmNewPassword" class="block text-gray-700 font-semibold mb-2">Confirmer le mot de passe</label>
-                            <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600" placeholder="••••••••">
-                            <span class="text-red-500 text-sm hidden" id="confirmPasswordError">Les mots de passe ne correspondent pas</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-2">
-                        <i class="fas fa-info-circle mr-1"></i>Laissez vide si vous ne souhaitez pas changer le mot de passe
-                    </p>
+                <div id="coachsList" class="space-y-4 max-h-96 overflow-y-auto">
+                    <!-- Coach cards will be loaded here -->
                 </div>
+            </div>
 
-                <!-- Action Buttons -->
-                <div class="flex space-x-4">
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transform hover:scale-105 transition duration-300">
-                        <i class="fas fa-save mr-2"></i>Enregistrer les Modifications
-                    </button>
-                    <button type="button" onclick="resetForm()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition duration-300">
-                        <i class="fas fa-undo mr-2"></i>Réinitialiser
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Statistics Section -->
-        <div class="bg-white rounded-xl shadow-lg p-8 mt-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">
-                <i class="fas fa-chart-line text-purple-600 mr-2"></i>Mes Statistiques
-            </h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="text-center p-4 bg-purple-50 rounded-lg">
-                    <i class="fas fa-users text-3xl text-purple-600 mb-2"></i>
-                    <p class="text-2xl font-bold text-gray-800">48</p>
-                    <p class="text-sm text-gray-600">Sportifs</p>
-                </div>
-                <div class="text-center p-4 bg-green-50 rounded-lg">
-                    <i class="fas fa-calendar-check text-3xl text-green-600 mb-2"></i>
-                    <p class="text-2xl font-bold text-gray-800">156</p>
-                    <p class="text-sm text-gray-600">Séances</p>
-                </div>
-                <div class="text-center p-4 bg-yellow-50 rounded-lg">
-                    <i class="fas fa-star text-3xl text-yellow-600 mb-2"></i>
-                    <p class="text-2xl font-bold text-gray-800">4.8</p>
-                    <p class="text-sm text-gray-600">Note moyenne</p>
-                </div>
-                <div class="text-center p-4 bg-blue-50 rounded-lg">
-                    <i class="fas fa-trophy text-3xl text-blue-600 mb-2"></i>
-                    <p class="text-2xl font-bold text-gray-800">10</p>
-                    <p class="text-sm text-gray-600">Ans d'exp.</p>
+            <!-- My Bookings -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-calendar-alt text-purple-600 mr-2"></i>Mes Réservations
+                </h2>
+                <div id="bookingsList" class="space-y-4 max-h-96 overflow-y-auto">
+                    <!-- Bookings will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Réserver une séance</h3>
+                <button onclick="closeBookingModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="bookingForm">
+                <input type="hidden" id="selectedCoachId">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Coach</label>
+                    <p id="selectedCoachName" class="text-gray-600 font-medium"></p>
+                </div>
+                <div class="mb-4">
+                    <label for="bookingDate" class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-calendar mr-2 text-purple-600"></i>Date
+                    </label>
+                    <input type="date" id="bookingDate" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                </div>
+                <div class="mb-6">
+                    <label for="availabilitySelect" class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-clock mr-2 text-purple-600"></i>Créneau disponible
+                    </label>
+                    <select id="availabilitySelect" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600">
+                        <option value="">Sélectionnez d'abord une date</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300">
+                    <i class="fas fa-check mr-2"></i>Confirmer la réservation
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Laisser un avis</h3>
+                <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="reviewForm">
+                <input type="hidden" id="reviewBookingId">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-star mr-2 text-yellow-500"></i>Note
+                    </label>
+                    <div class="flex space-x-2" id="ratingStars">
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="1"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="2"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="3"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="4"></i>
+                        <i class="fas fa-star text-3xl text-gray-300 cursor-pointer hover:text-yellow-500" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="ratingValue" required>
+                </div>
+                <div class="mb-6">
+                    <label for="reviewComment" class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-comment mr-2 text-purple-600"></i>Commentaire
+                    </label>
+                    <textarea id="reviewComment" rows="4" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-600" placeholder="Partagez votre expérience..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300">
+                    <i class="fas fa-paper-plane mr-2"></i>Envoyer l'avis
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Character counter for bio
-        const bioTextarea = document.getElementById('bio');
-        const bioCount = document.getElementById('bioCount');
+        // Sample data - Replace with actual API calls
+        let coaches = [
+            { id: 1, name: "Ahmed Benali", sport: "Football", experience: 10, photo: "https://via.placeholder.com/100", rating: 4.8, certifications: "UEFA B, CAF" },
+            { id: 2, name: "Sarah Alami", sport: "Tennis", experience: 8, photo: "https://via.placeholder.com/100", rating: 4.9, certifications: "FFT Niveau 2" },
+            { id: 3, name: "Karim El Idrissi", sport: "Natation", experience: 12, photo: "https://via.placeholder.com/100", rating: 4.7, certifications: "MNS, BEESAN" },
+            { id: 4, name: "Fatima Zahra", sport: "Préparation physique", experience: 6, photo: "https://via.placeholder.com/100", rating: 4.6, certifications: "BPJEPS AGFF" }
+        ];
 
-        function updateBioCount() {
-            const count = bioTextarea.value.length;
-            bioCount.textContent = count;
-            if (count > 500) {
-                bioCount.classList.add('text-red-500');
-                bioTextarea.value = bioTextarea.value.substring(0, 500);
-            } else {
-                bioCount.classList.remove('text-red-500');
-            }
+        let bookings = [
+            { id: 1, coach: "Ahmed Benali", date: "2025-12-20", time: "14:00-15:00", status: "pending" },
+            { id: 2, coach: "Sarah Alami", date: "2025-12-18", time: "10:00-11:00", status: "accepted" }
+        ];
+
+        // Load stats
+        function loadStats() {
+            document.getElementById('totalBookings').textContent = bookings.length;
+            document.getElementById('pendingBookings').textContent = bookings.filter(b => b.status === 'pending').length;
+            document.getElementById('acceptedBookings').textContent = bookings.filter(b => b.status === 'accepted').length;
+            document.getElementById('availableCoaches').textContent = coaches.length;
         }
 
-        bioTextarea.addEventListener('input', updateBioCount);
-        updateBioCount();
+        // Load coaches
+        function loadCoaches(filter = '') {
+            const coachsList = document.getElementById('coachsList');
+            const filteredCoaches = filter ? coaches.filter(c => c.sport === filter) : coaches;
+            
+            coachsList.innerHTML = filteredCoaches.map(coach => `
+                <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-600 transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <img src="${coach.photo}" alt="${coach.name}" class="w-20 h-20 rounded-full object-cover">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800">${coach.name}</h3>
+                            <p class="text-sm text-gray-600"><i class="fas fa-trophy text-purple-600 mr-1"></i>${coach.sport}</p>
+                            <p class="text-sm text-gray-600"><i class="fas fa-certificate text-purple-600 mr-1"></i>${coach.certifications}</p>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                <span class="text-sm font-semibold">${coach.rating}</span>
+                                <span class="text-sm text-gray-500 ml-2">${coach.experience} ans d'exp.</span>
+                            </div>
+                        </div>
+                        <button onclick="openBookingModal(${coach.id}, '${coach.name}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
+                            <i class="fas fa-calendar-plus mr-1"></i>Réserver
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-        // Photo preview
-        function previewPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                // Validate file type
-                if (!file.type.startsWith('image/')) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Veuillez sélectionner une image valide',
-                        confirmButtonColor: '#7c3aed'
-                    });
-                    return;
-                }
+        // Load bookings
+        function loadBookings() {
+            const bookingsList = document.getElementById('bookingsList');
+            
+            if (bookings.length === 0) {
+                bookingsList.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune réservation</p>';
+                return;
+            }
 
-                // Validate file size (max 5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'L\'image ne doit pas dépasser 5MB',
-                        confirmButtonColor: '#7c3aed'
-                    });
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('profilePhoto').src = e.target.result;
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Photo mise à jour!',
-                        text: 'N\'oubliez pas d\'enregistrer vos modifications',
-                        confirmButtonColor: '#7c3aed',
-                        timer: 2000
-                    });
+            bookingsList.innerHTML = bookings.map(booking => {
+                const statusColors = {
+                    pending: 'bg-yellow-100 text-yellow-800',
+                    accepted: 'bg-green-100 text-green-800',
+                    rejected: 'bg-red-100 text-red-800',
+                    cancelled: 'bg-gray-100 text-gray-800'
                 };
-                reader.readAsDataURL(file);
-            }
+                const statusText = {
+                    pending: 'En attente',
+                    accepted: 'Acceptée',
+                    rejected: 'Refusée',
+                    cancelled: 'Annulée'
+                };
+
+                return `
+                    <div class="border-2 border-gray-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-gray-800">${booking.coach}</h4>
+                            <span class="px-2 py-1 rounded text-xs font-semibold ${statusColors[booking.status]}">${statusText[booking.status]}</span>
+                        </div>
+                        <p class="text-sm text-gray-600"><i class="fas fa-calendar mr-1"></i>${booking.date}</p>
+                        <p class="text-sm text-gray-600"><i class="fas fa-clock mr-1"></i>${booking.time}</p>
+                        <div class="flex space-x-2 mt-3">
+                            ${booking.status === 'accepted' ? `
+                                <button onclick="openReviewModal(${booking.id})" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs transition duration-300">
+                                    <i class="fas fa-star mr-1"></i>Avis
+                                </button>
+                            ` : ''}
+                            ${booking.status === 'pending' || booking.status === 'accepted' ? `
+                                <button onclick="cancelBooking(${booking.id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition duration-300">
+                                    <i class="fas fa-times mr-1"></i>Annuler
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        // Form validation and submission
-        document.getElementById('profileForm').addEventListener('submit', function(e) {
+        // Booking Modal
+        function openBookingModal(coachId, coachName) {
+            document.getElementById('selectedCoachId').value = coachId;
+            document.getElementById('selectedCoachName').textContent = coachName;
+            document.getElementById('bookingModal').classList.remove('hidden');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').setAttribute('min', today);
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+            document.getElementById('bookingForm').reset();
+        }
+
+        // Load availabilities when date changes
+        document.getElementById('bookingDate').addEventListener('change', function() {
+            const coachId = document.getElementById('selectedCoachId').value;
+            const date = this.value;
+            
+            // Simulated availabilities - Replace with API call
+            const availabilities = [
+                { id: 1, time: '09:00-10:00' },
+                { id: 2, time: '10:00-11:00' },
+                { id: 3, time: '14:00-15:00' },
+                { id: 4, time: '15:00-16:00' }
+            ];
+
+            const select = document.getElementById('availabilitySelect');
+            select.innerHTML = availabilities.map(a => 
+                `<option value="${a.id}">${a.time}</option>`
+            ).join('');
+        });
+
+        // Submit booking
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const coachId = document.getElementById('selectedCoachId').value;
+            const coachName = document.getElementById('selectedCoachName').textContent;
+            const date = document.getElementById('bookingDate').value;
+            const availabilityId = document.getElementById('availabilitySelect').value;
+            const timeSlot = document.getElementById('availabilitySelect').options[document.getElementById('availabilitySelect').selectedIndex].text;
 
-            // Get form values
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const bio = document.getElementById('bio').value.trim();
-            const experienceYears = document.getElementById('experienceYears').value;
-            const certifications = document.getElementById('certifications').value.trim();
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            // Add booking (Replace with API call)
+            bookings.push({
+                id: bookings.length + 1,
+                coach: coachName,
+                date: date,
+                time: timeSlot,
+                status: 'pending'
+            });
 
-            // Get selected sports
-            const selectedSports = Array.from(document.querySelectorAll('input[name="sports"]:checked')).map(cb => cb.value);
-
-            // Regex patterns
-            const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-            let isValid = true;
-
-            // Reset errors
-            document.querySelectorAll('.text-red-500').forEach(error => error.classList.add('hidden'));
-
-            // Validate names
-            if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur',
-                    text: 'Nom ou prénom invalide',
-                    confirmButtonColor: '#7c3aed'
-                });
-                return;
-            }
-
-            // Validate email
-            if (!emailRegex.test(email)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur',
-                    text: 'Email invalide',
-                    confirmButtonColor: '#7c3aed'
-                });
-                return;
-            }
-
-            // Validate bio
-            if (bio.length < 50) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur',
-                    text: 'La biographie doit contenir au moins 50 caractères',
-                    confirmButtonColor: '#7c3aed'
-                });
-                return;
-            }
-
-            // Validate sports selection
-            if (selectedSports.length === 0) {
-                document.getElementById('sportsError').classList.remove('hidden');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur',
-                    text: 'Veuillez sélectionner au moins une discipline sportive',
-                    confirmButtonColor: '#7c3aed'
-                });
-                return;
-            }
-
-            // Validate password if changing
-            if (newPassword || confirmNewPassword) {
-                if (!currentPassword) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Veuillez entrer votre mot de passe actuel',
-                        confirmButtonColor: '#7c3aed'
-                    });
-                    return;
-                }
-
-                if (!passwordRegex.test(newPassword)) {
-                    document.getElementById('passwordError').classList.remove('hidden');
-                    return;
-                }
-
-                if (newPassword !== confirmNewPassword) {
-                    document.getElementById('confirmPasswordError').classList.remove('hidden');
-                    return;
-                }
-            }
-
-            // Prepare data to send (Replace with actual API call)
-            const profileData = {
-                firstName,
-                lastName,
-                email,
-                bio,
-                experienceYears,
-                certifications,
-                sports: selectedSports,
-                ...(newPassword && { newPassword })
-            };
-
-            console.log('Profile Data:', profileData);
-
-            // Show success message
             Swal.fire({
                 icon: 'success',
-                title: 'Profil mis à jour!',
-                text: 'Vos modifications ont été enregistrées avec succès',
+                title: 'Réservation envoyée!',
+                text: 'Votre demande a été envoyée au coach.',
                 confirmButtonColor: '#7c3aed'
-            }).then(() => {
-                // Update display name
-                document.getElementById('displayName').textContent = `${firstName} ${lastName}`;
-                document.getElementById('displayEmail').textContent = email;
+            });
 
-                // Clear password fields
-                document.getElementById('currentPassword').value = '';
-                document.getElementById('newPassword').value = '';
-                document.getElementById('confirmNewPassword').value = '';
+            closeBookingModal();
+            loadBookings();
+            loadStats();
+        });
+
+        // Review Modal
+        function openReviewModal(bookingId) {
+            document.getElementById('reviewBookingId').value = bookingId;
+            document.getElementById('reviewModal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+            document.getElementById('reviewForm').reset();
+            document.querySelectorAll('#ratingStars i').forEach(star => {
+                star.classList.remove('text-yellow-500');
+                star.classList.add('text-gray-300');
+            });
+        }
+
+        // Rating stars
+        document.querySelectorAll('#ratingStars i').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                document.getElementById('ratingValue').value = rating;
+                
+                document.querySelectorAll('#ratingStars i').forEach(s => {
+                    s.classList.remove('text-yellow-500');
+                    s.classList.add('text-gray-300');
+                });
+                
+                for (let i = 0; i < rating; i++) {
+                    document.querySelectorAll('#ratingStars i')[i].classList.remove('text-gray-300');
+                    document.querySelectorAll('#ratingStars i')[i].classList.add('text-yellow-500');
+                }
             });
         });
 
-        // Reset form
-        function resetForm() {
+        // Submit review
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const rating = document.getElementById('ratingValue').value;
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!rating) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Veuillez sélectionner une note',
+                    confirmButtonColor: '#7c3aed'
+                });
+                return;
+            }
+
+            // Submit review (Replace with API call)
             Swal.fire({
-                title: 'Réinitialiser le formulaire?',
-                text: "Toutes les modifications non enregistrées seront perdues",
+                icon: 'success',
+                title: 'Merci!',
+                text: 'Votre avis a été enregistré.',
+                confirmButtonColor: '#7c3aed'
+            });
+
+            closeReviewModal();
+        });
+
+        // Cancel booking
+        function cancelBooking(bookingId) {
+            Swal.fire({
+                title: 'Confirmer l\'annulation?',
+                text: "Cette action est irréversible",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#7c3aed',
+                confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Oui, réinitialiser',
-                cancelButtonText: 'Annuler'
+                confirmButtonText: 'Oui, annuler',
+                cancelButtonText: 'Non'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('profileForm').reset();
-                    updateBioCount();
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Réinitialisé!',
-                        text: 'Le formulaire a été réinitialisé',
-                        confirmButtonColor: '#7c3aed',
-                        timer: 2000
-                    });
+                    const index = bookings.findIndex(b => b.id === bookingId);
+                    if (index > -1) {
+                        bookings[index].status = 'cancelled';
+                        loadBookings();
+                        loadStats();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Annulée!',
+                            text: 'La réservation a été annulée.',
+                            confirmButtonColor: '#7c3aed'
+                        });
+                    }
                 }
             });
         }
+
+        // Search and filter
+        document.getElementById('searchCoach').addEventListener('input', function(e) {
+            const search = e.target.value.toLowerCase();
+            const filtered = coaches.filter(c => 
+                c.name.toLowerCase().includes(search) || 
+                c.sport.toLowerCase().includes(search)
+            );
+            
+            const coachsList = document.getElementById('coachsList');
+            coachsList.innerHTML = filtered.map(coach => `
+                <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-600 transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <img src="${coach.photo}" alt="${coach.name}" class="w-20 h-20 rounded-full object-cover">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800">${coach.name}</h3>
+                            <p class="text-sm text-gray-600"><i class="fas fa-trophy text-purple-600 mr-1"></i>${coach.sport}</p>
+                            <p class="text-sm text-gray-600"><i class="fas fa-certificate text-purple-600 mr-1"></i>${coach.certifications}</p>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                <span class="text-sm font-semibold">${coach.rating}</span>
+                                <span class="text-sm text-gray-500 ml-2">${coach.experience} ans d'exp.</span>
+                            </div>
+                        </div>
+                        <button onclick="openBookingModal(${coach.id}, '${coach.name}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
+                            <i class="fas fa-calendar-plus mr-1"></i>Réserver
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        });
+
+        document.getElementById('sportFilter').addEventListener('change', function() {
+            loadCoaches(this.value);
+        });
 
         // Logout
         function logout() {
@@ -461,9 +504,10 @@
             });
         }
 
-        // Initialize display
-        document.getElementById('displayName').textContent = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;
-        document.getElementById('displayEmail').textContent = document.getElementById('email').value;
+        // Initialize
+        loadStats();
+        loadCoaches();
+        loadBookings();
     </script>
 </body>
 </html>

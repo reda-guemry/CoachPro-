@@ -1,4 +1,7 @@
 
+import verifysesionlog from './verificationsesion.js';
+
+
 
 
 function loginrequest(datajson) {
@@ -7,7 +10,13 @@ function loginrequest(datajson) {
             body : datajson
         })
         .then(rep => rep.text())
-        .then(data => console.log(data))
+        .then(data => {
+            if(data == "success"){
+                verifysesionlog() ;
+            }else {
+                window.location.href = "login.html" ; 
+            }
+        })
         .catch(eroor => console.log(eroor))
 }
 

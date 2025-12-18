@@ -77,3 +77,13 @@ CREATE TABLE reviews (
                           ON DELETE CASCADE 
                           ON UPDATE CASCADE  
 );
+
+CREATE TABLE sesionses (
+    sesion_id VARCHAR(255) PRIMARY KEY ,
+    user_id INT NOT NULL ,
+    role_user ENUM("sportif" , "coach") NOT NULL ,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) 
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE 
+
+) ; 
