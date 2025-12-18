@@ -8,21 +8,21 @@ function getallavai() {
 
 function getallpendigres() {
     fetch("../../BACK/API/getallpendres.php")
-        .then(rep => rep.text())
-        .then(data => console.log(data))
+        .then(rep => rep.json())
+        .then(data => loadPendingRequests(data))
         .catch(error =>console.error(error))
 }
 
 // Sample data - Replace with actual API calls
-let bookingRequests = [
-    { id: 1, sportif: "Youssef Amrani", date: "2025-12-20", time: "14:00-15:00", status: "pending", sportif_id: 1 },
-    { id: 2, sportif: "Amina Benkirane", date: "2025-12-21", time: "10:00-11:00", status: "pending", sportif_id: 2 }
-];
+// let bookingRequests = [
+//     { id: 1, sportif: "Youssef Amrani", date: "2025-12-20", time: "14:00-15:00", status: "pending", sportif_id: 1 },
+//     { id: 2, sportif: "Amina Benkirane", date: "2025-12-21", time: "10:00-11:00", status: "pending", sportif_id: 2 }
+// ];
 
-let acceptedSessions = [
-    { id: 3, sportif: "Omar Tazi", date: "2025-12-18", time: "09:00-10:00", status: "accepted" },
-    { id: 4, sportif: "Leila Mahjoub", date: "2025-12-19", time: "15:00-16:00", status: "accepted" }
-];
+// let acceptedSessions = [
+//     { id: 3, sportif: "Omar Tazi", date: "2025-12-18", time: "09:00-10:00", status: "accepted" },
+//     { id: 4, sportif: "Leila Mahjoub", date: "2025-12-19", time: "15:00-16:00", status: "accepted" }
+// ];
 
 // let availabilities = [
 //     { id: 1, date: "2025-12-20", start: "09:00", end: "10:00", status: "available" },
@@ -30,10 +30,10 @@ let acceptedSessions = [
 //     { id: 3, date: "2025-12-21", start: "10:00", end: "11:00", status: "available" }
 // ];
 
-let reviews = [
-    { id: 1, sportif: "Hassan Alami", rating: 5, comment: "Excellent coach! Très professionnel.", date: "2025-12-10" },
-    { id: 2, sportif: "Sara Idrissi", rating: 4, comment: "Bon entraînement, je recommande.", date: "2025-12-08" }
-];
+// let reviews = [
+//     { id: 1, sportif: "Hassan Alami", rating: 5, comment: "Excellent coach! Très professionnel.", date: "2025-12-10" },
+//     { id: 2, sportif: "Sara Idrissi", rating: 4, comment: "Bon entraînement, je recommande.", date: "2025-12-08" }
+// ];
 
 // Load stats
 function loadStats() {
@@ -57,26 +57,32 @@ function loadStats() {
 }
 
 // Load pending requests
-function loadPendingRequests(dara) {
+function loadPendingRequests(data) {
     const list = document.getElementById('pendingRequestsList');
     
-    if (data.filter(b => b.status === 'pending').length === 0) {
+    const pending = data.filter(b => b.status === 'pending');
+
+    if (pending.length === 0) {
         list.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune demande en attente</p>';
         return;
     }
 
-    list.innerHTML = data.filter(b => b.status === 'pending').map(request => `
+    list.innerHTML = pending.map(request => {
+        const coachName = `${request.first_name} ${request.last_name}`;
+        const time = `${request.start_time} - ${request.end_time}`;
+
+        return `
         <div class="border-2 border-yellow-200 bg-yellow-50 rounded-lg p-4">
             <div class="flex justify-between items-start mb-3">
                 <div>
                     <h4 class="font-bold text-gray-800 text-lg">
-                        <i class="fas fa-user text-purple-600 mr-2"></i>${request.sportif}
+                        <i class="fas fa-user text-purple-600 mr-2"></i>${coachName}
                     </h4>
                     <p class="text-sm text-gray-600 mt-1">
-                        <i class="fas fa-calendar mr-1"></i>${request.date}
+                        <i class="fas fa-calendar mr-1"></i>${request.availabilites_date}
                     </p>
                     <p class="text-sm text-gray-600">
-                        <i class="fas fa-clock mr-1"></i>${request.time}
+                        <i class="fas fa-clock mr-1"></i>${time}
                     </p>
                 </div>
                 <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-xs font-semibold">
@@ -84,15 +90,16 @@ function loadPendingRequests(dara) {
                 </span>
             </div>
             <div class="flex space-x-2">
-                <button onclick="acceptBooking(${request.id})" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg transition duration-300">
+                <button onclick="acceptBooking(${request.booking_id})" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg transition duration-300">
                     <i class="fas fa-check mr-1"></i>Accepter
                 </button>
-                <button onclick="rejectBooking(${request.id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg transition duration-300">
+                <button onclick="rejectBooking(${request.booking_id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg transition duration-300">
                     <i class="fas fa-times mr-1"></i>Refuser
                 </button>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Load accepted sessions
@@ -258,34 +265,29 @@ function acceptBooking(bookingId) {
         cancelButtonText: 'Annuler'
     }).then((result) => {
         if (result.isConfirmed) {
-            const index = bookingRequests.findIndex(b => b.id === bookingId);
-            if (index > -1) {
-                const booking = bookingRequests[index];
-                booking.status = 'accepted';
-                acceptedSessions.push(booking);
-                bookingRequests.splice(index, 1);
+            fetch("../../BACK/API/acceptboking.php" , {
+                method : "POST", 
+                headers : { "Content-Type": "application/json"} , 
+                body : JSON.stringify({ bookingId: bookingId })
+            })
+                .then(rep => rep.text())
+                .then(data => {
+                    console.log(data)
+                    getallpendigres();
+                    getallavai() ;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Acceptée!',
+                        text: 'La réservation a été acceptée',
+                        confirmButtonColor: '#7c3aed'
+                    });
+                })
+                .catch(error => console.error(error))
 
-                // Update availability status
-                const availIndex = availabilities.findIndex(a => 
-                    a.date === booking.date && 
-                    `${a.start}-${a.end}` === booking.time
-                );
-                if (availIndex > -1) {
-                    availabilities[availIndex].status = 'booked';
-                }
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Acceptée!',
-                    text: 'La réservation a été acceptée',
-                    confirmButtonColor: '#7c3aed'
-                });
-
-                loadPendingRequests();
-                loadAcceptedSessions();
-                loadAvailabilities();
-                loadStats();
-            }
+                // loadPendingRequests();
+                // loadAcceptedSessions();
+                // loadAvailabilities();
+                // loadStats();
         }
     });
 }
@@ -303,21 +305,24 @@ function rejectBooking(bookingId) {
         cancelButtonText: 'Annuler'
     }).then((result) => {
         if (result.isConfirmed) {
-            const index = bookingRequests.findIndex(b => b.id === bookingId);
-            if (index > -1) {
-                bookingRequests[index].status = 'rejected';
-                bookingRequests.splice(index, 1);
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Refusée!',
-                    text: 'La réservation a été refusée',
-                    confirmButtonColor: '#7c3aed'
-                });
-
-                loadPendingRequests();
-                loadStats();
-            }
+            fetch("../../BACK/API/rejectboking.php" , {
+                method : "POST", 
+                headers : { "Content-Type": "application/json"} , 
+                body : JSON.stringify({ bookingId: bookingId })
+            })
+                .then(rep => rep.text())
+                .then(data => {
+                    console.log(data)
+                    getallpendigres();
+                    getallavai() ;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Refusée!',
+                        text: 'La réservation a été refusée',
+                        confirmButtonColor: '#7c3aed'
+                    });
+                })
+                .catch(error => console.error(error))
         }
     });
 }
@@ -335,19 +340,24 @@ function deleteAvailability(availId) {
         cancelButtonText: 'Annuler'
     }).then((result) => {
         if (result.isConfirmed) {
-            const index = availabilities.findIndex(a => a.id === availId);
-            if (index > -1) {
-                availabilities.splice(index, 1);
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Supprimée!',
-                    text: 'La disponibilité a été supprimée',
-                    confirmButtonColor: '#7c3aed'
-                });
-
-                loadAvailabilities();
-            }
+            fetch("../../BACK/API/deletavailibilter.php" , {
+                method : "POST", 
+                headers : { "Content-Type": "application/json"} , 
+                body : JSON.stringify({ bookingId: bookingId })
+            })
+                .then(rep => rep.text())
+                .then(data => {
+                    console.log(data)
+                    getallpendigres();
+                    getallavai() ;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Supprimée!',
+                        text: 'La disponibilité a été supprimée',
+                        confirmButtonColor: '#7c3aed'
+                    });
+                })
+                .catch(error => console.error(error))
         }
     });
 }
@@ -375,9 +385,10 @@ function logout() {
 }
 
 // Initialize
-loadStats();
-loadPendingRequests();
-loadAcceptedSessions();
+// loadStats();
+// loadPendingRequests();
+// loadAcceptedSessions();
 // loadAvailabilities();
-loadReviews();
+// loadReviews();
+getallpendigres() 
 getallavai()

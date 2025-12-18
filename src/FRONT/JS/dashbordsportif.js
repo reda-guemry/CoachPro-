@@ -319,13 +319,7 @@ function cancelBooking(bookingId) {
                 })
                 .catch(error => console.error(error))
                 
-            loadStats();
-            Swal.fire({
-                icon: 'success',
-                title: 'Annulée!',
-                text: 'La réservation a été annulée.',
-                confirmButtonColor: '#7c3aed'
-            });
+            
         }
     });
 }

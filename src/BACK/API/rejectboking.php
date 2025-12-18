@@ -18,7 +18,7 @@
     $update = $connect->prepare("UPDATE availabilites SET status = 'available' WHERE availability_id = ?");
     $update->execute([$availabilityId]);
 
-    $delete = $connect->prepare("DELETE FROM bookings WHERE booking_id = ?");
+    $delete = $connect->prepare("UPDATE bookings SET status = 'cancelled' WHERE booking_id  = ?");
     $delete->execute([$bookingId]);
 
     echo json_encode(["status" => "success", "message" => "Booking cancelled successfully"]);
