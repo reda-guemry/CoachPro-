@@ -1,6 +1,4 @@
-// Sample data - Replace with actual API calls
-
-let bookings ; 
+// Sample data - Replace with actual API calls 
 
 fetch("../../BACK/API/selectallcoaches.php")
     .then(rep => rep.json())
@@ -12,24 +10,23 @@ function getallbooking() {
     fetch("../../BACK/API/allboking.php")
         .then(rep => rep.json())
         .then(data => { 
-            bookings = [data]; 
-            loadBookings([data]) ; 
-            loadStats() ; 
+            loadBookings(data) ; 
+            loadStats(data) ; 
         })
         .catch(error => console.error(error))
 }
-getallbooking()
+// getallbooking()
 
 
 
 
  
 
-function loadStats() {
-    document.getElementById('totalBookings').textContentlt  = bookings.length;
-    document.getElementById('pendingBookings').textContentlt  = bookings.filter(b => b.status === 'pending').length;    
-    document.getElementById('acceptedBookings').textContentlt  = bookings.filter(b => b.status === 'accepted').length;
-    document.getElementById('availableCoaches').textContent = coaches.length;
+function loadStats(bookings) {
+    document.getElementById('totalBookings').textContent  = bookings.length;
+    document.getElementById('pendingBookings').textContent  = bookings.filter(b => b.status === 'pending').length;    
+    document.getElementById('acceptedBookings').textContent  = bookings.filter(b => b.status === 'accepted').length;
+    // document.getElementById('availableCoaches').textContent = coaches.length;
 }
 
 // Load coaches
@@ -66,7 +63,7 @@ function loadBookings(data) {
         bookingsList.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune réservation</p>';
         return;
     }
-const statusColors = {
+    const statusColors = {
         pending: 'bg-yellow-100 text-yellow-800',
         accepted: 'bg-green-100 text-green-800',
         rejected: 'bg-red-100 text-red-800',
@@ -106,14 +103,18 @@ const statusColors = {
 
                 <div class="flex space-x-2 mt-3">
                     ${booking.status === 'accepted' ? `
-                        <button class="flex-1 bg-purple-600 hover:bg-purple-700 
+                        <button 
+                            onclick="openReviewModal(${booking.booking_id})"
+                            class="flex-1 bg-purple-600 hover:bg-purple-700 
                             text-white px-3 py-1 rounded text-xs transition duration-300">
                             <i class="fas fa-star mr-1"></i>Avis
                         </button>
                     ` : ''}
 
                     ${(booking.status === 'pending' || booking.status === 'accepted') ? `
-                        <button class="flex-1 bg-red-500 hover:bg-red-600 
+                        <button 
+                            onclick="cancelBooking(${booking.booking_id})"
+                            class="flex-1 bg-red-500 hover:bg-red-600 
                             text-white px-3 py-1 rounded text-xs transition duration-300">
                             <i class="fas fa-times mr-1"></i>Annuler
                         </button>
@@ -224,8 +225,7 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
     });
 
     closeBookingModal();
-    loadBookings();
-    loadStats();
+    // loadStats();
 });
 
 // Review Modal
@@ -302,18 +302,30 @@ function cancelBooking(bookingId) {
         cancelButtonText: 'Non'
     }).then((result) => {
         if (result.isConfirmed) {
-            const indexlt  = bookings.findIndex(b => b.id === bookingId);
-            if (index > -1) {
-                bookings[index].status = 'cancelled';
-                loadBookings();
-                loadStats();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Annulée!',
-                    text: 'La réservation a été annulée.',
-                    confirmButtonColor: '#7c3aed'
-                });
-            }
+            fetch("../../BACK/API/canceledboking.php" , {
+                method : "POST", 
+                headers : { "Content-Type": "application/json"} , 
+                body : JSON.stringify({ bookingId: bookingId })
+            })
+                .then(rep => rep.text())
+                .then(data => {
+                    getallbooking();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Annulée!',
+                        text: 'La réservation a été annulée.',
+                        confirmButtonColor: '#7c3aed'
+                    });
+                })
+                .catch(error => console.error(error))
+                
+            loadStats();
+            Swal.fire({
+                icon: 'success',
+                title: 'Annulée!',
+                text: 'La réservation a été annulée.',
+                confirmButtonColor: '#7c3aed'
+            });
         }
     });
 }
@@ -372,8 +384,8 @@ function logout() {
 }
 
 // Initialize
-loadStats();
-loadBookings();
+// loadStats();
+// loadBookings();
 getallbooking();
 
 

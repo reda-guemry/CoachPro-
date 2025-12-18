@@ -6,6 +6,13 @@ function getallavai() {
         .catch(error =>console.error(error))
 }
 
+function getallpendigres() {
+    fetch("../../BACK/API/getallpendres.php")
+        .then(rep => rep.text())
+        .then(data => console.log(data))
+        .catch(error =>console.error(error))
+}
+
 // Sample data - Replace with actual API calls
 let bookingRequests = [
     { id: 1, sportif: "Youssef Amrani", date: "2025-12-20", time: "14:00-15:00", status: "pending", sportif_id: 1 },
@@ -50,15 +57,15 @@ function loadStats() {
 }
 
 // Load pending requests
-function loadPendingRequests() {
+function loadPendingRequests(dara) {
     const list = document.getElementById('pendingRequestsList');
     
-    if (bookingRequests.filter(b => b.status === 'pending').length === 0) {
+    if (data.filter(b => b.status === 'pending').length === 0) {
         list.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune demande en attente</p>';
         return;
     }
 
-    list.innerHTML = bookingRequests.filter(b => b.status === 'pending').map(request => `
+    list.innerHTML = data.filter(b => b.status === 'pending').map(request => `
         <div class="border-2 border-yellow-200 bg-yellow-50 rounded-lg p-4">
             <div class="flex justify-between items-start mb-3">
                 <div>
