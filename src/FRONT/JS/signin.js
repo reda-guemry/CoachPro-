@@ -42,7 +42,7 @@ function signinfetch(datajson) {
             body : datajson
         })
         .then(rep => rep.text())
-        .then(data => data == "success" ? window.location.href = "login.html" : console.log("masd9tch"))
+        .then(data => data == "success" ? window.location.href = "login.html" : console.log(data))
         .catch(eroor => console.log(eroor))
 }
 

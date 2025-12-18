@@ -29,7 +29,6 @@
             $nameProfilePhoto =  $_FILES["profilePhoto"]["name"] ; 
             $uploadDirectionProfile = "../../FRONT/IMG/PROFILESPHOTO/" . $nameProfilePhoto ;
             move_uploaded_file( $_FILES["profilePhoto"]["tmp_name"] , $uploadDirectionProfile) ;
-            chmod($uploadDirectionProfile, 0777);
             $profilePhotoPath = '../IMG/PROFILESPHOTO/' . $nameProfilePhoto ; 
         }
 
@@ -38,7 +37,6 @@
             $nameCertifPhoto = $_FILES["certificate"]["name"] ; 
             $uploadDirectionCertif = "../../FRONT/IMG/CERTIFICATEPHOTO/" . $nameCertifPhoto ;
             move_uploaded_file($_FILES["certificate"]["tmp_name"] , $uploadDirectionCertif) ; 
-            chmod($uploadDirectionCertif, 0777);
             $certificatePhotoPath = '../IMG/CERTIFICATEPHOTO/' . $nameCertifPhoto ; 
         }
 
