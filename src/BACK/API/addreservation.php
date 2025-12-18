@@ -11,6 +11,9 @@
     $time = $datareser['time'] ;
     $status = $datareser['status'] ;
 
+    $modifstatuavail = $connect -> prepare("UPDATE availabilites SET status = 'booked' WHERE availability_id = ? ") ;
+    $modifstatuavail -> execute([$time]) ; 
+
     $insertrese = $connect -> prepare("INSERT INTO bookings (sportif_id , coach_id , availability_id , status) VALUE (? , ? , ? , ?);") ; 
     $insertrese -> execute([$userID , $coachId , $time , $status]) ; 
 

@@ -11,7 +11,7 @@
     $coachId = $data["coach_id"] ;
     
 
-    $getallreser = $connect -> prepare("SELECT * FROM availabilites WHERE availabilites_date = ? AND coach_id = ? ") ;
+    $getallreser = $connect -> prepare("SELECT * FROM availabilites WHERE availabilites_date = ? AND coach_id = ? AND status = 'available'") ;
     $getallreser -> execute([ $datereserver , $coachId ]) ; 
     $reponsedata = $getallreser -> fetchAll() ;
 

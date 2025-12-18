@@ -1,19 +1,30 @@
 // Sample data - Replace with actual API calls
 
+let bookings ; 
+
 fetch("../../BACK/API/selectallcoaches.php")
     .then(rep => rep.json())
     .then(coaches => loadCoaches(coaches))
     .catch(error => console.error(error))
 
+
 function getallbooking() {
     fetch("../../BACK/API/allboking.php")
+        .then(rep => rep.json())
+        .then(data => { 
+            bookings = [data]; 
+            loadBookings([data]) ; 
+            loadStats() ; 
+        })
+        .catch(error => console.error(error))
 }
+getallbooking()
+
 
 
 
  
 
-// Load stats
 function loadStats() {
     document.getElementById('totalBookings').textContentlt  = bookings.length;
     document.getElementById('pendingBookings').textContentlt  = bookings.filter(b => b.status === 'pending').length;    
@@ -48,44 +59,62 @@ function loadCoaches(filteredCoaches) {
 }
 
 // Lolt ad bookings
-function loadBookings() {
+function loadBookings(data) {
     const bookingsList = document.getElementById('bookingsList');
     
-    if (bookings.length === 0) {
+    if (data.length === 0) {
         bookingsList.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune réservation</p>';
         return;
     }
+const statusColors = {
+        pending: 'bg-yellow-100 text-yellow-800',
+        accepted: 'bg-green-100 text-green-800',
+        rejected: 'bg-red-100 text-red-800',
+        cancelled: 'bg-gray-100 text-gray-800'
+    };
 
-    bookingsList.innerHTMLlt  = .map(booking => {
-        const statusColors = {
-            pending: 'bg-yellow-100 text-yellow-800',
-            accepted: 'bg-green-100 text-green-800',
-            rejected: 'bg-red-100 text-red-800',
-            cancelled: 'bg-gray-100 text-gray-800'
-        };
-        const statusText = {
-            pending: 'En attente',
-            accepted: 'Acceptée',
-            rejected: 'Refusée',
-            cancelled: 'Annulée'
-        };
+    const statusText = {
+        pending: 'En attente',
+        accepted: 'Acceptée',
+        rejected: 'Refusée',
+        cancelled: 'Annulée'
+    };
+
+    bookingsList.innerHTML = data.map(booking => {
+
+        const coachName = `${booking.first_name} ${booking.last_name}`;
+        const date = booking.availabilites_date;
+        const time = `${booking.start_time} - ${booking.end_time}`;
 
         return `
             <div class="border-2 border-gray-200 rounded-lg p-4">
                 <div class="flex justify-between items-start mb-2">
-                    <h4 class="font-bold text-gray-800">${booking.coach}</h4>
-                    <span class="px-2 py-1 rounded text-xs font-semibold ${statusColors[booking.status]}">${statusText[booking.status]}</span>
+                    <h4 class="font-bold text-gray-800">${coachName}</h4>
+                    <span class="px-2 py-1 rounded text-xs font-semibold 
+                        ${statusColors[booking.status] || ''}">
+                        ${statusText[booking.status] || booking.status}
+                    </span>
                 </div>
-                <p class="text-sm text-gray-600"><i class="fas fa-calendar mr-1"></i>${booking.date}</p>
-                <p class="text-sm text-gray-600"><i class="fas fa-clock mr-1"></i>${booking.time}</p>
+
+                <p class="text-sm text-gray-600">
+                    <i class="fas fa-calendar mr-1"></i>${date}
+                </p>
+
+                <p class="text-sm text-gray-600">
+                    <i class="fas fa-clock mr-1"></i>${time}
+                </p>
+
                 <div class="flex space-x-2 mt-3">
                     ${booking.status === 'accepted' ? `
-                        <button onclick="openReviewModal(${booking.id})" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs transition duration-300">
+                        <button class="flex-1 bg-purple-600 hover:bg-purple-700 
+                            text-white px-3 py-1 rounded text-xs transition duration-300">
                             <i class="fas fa-star mr-1"></i>Avis
                         </button>
                     ` : ''}
-                    ${booking.status === 'pending' || booking.status === 'accepted' ? `
-                        <button onclick="cancelBooking(${booking.id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition duration-300">
+
+                    ${(booking.status === 'pending' || booking.status === 'accepted') ? `
+                        <button class="flex-1 bg-red-500 hover:bg-red-600 
+                            text-white px-3 py-1 rounded text-xs transition duration-300">
                             <i class="fas fa-times mr-1"></i>Annuler
                         </button>
                     ` : ''}
@@ -184,7 +213,7 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
         body : JSON.stringify(booking)
     })
         .then(rep => rep.json())
-        .then(data => console.log(data))
+        .then(data => data.status == "success" ? getallbooking() : console.log(data))
         .catch(error => console.log(error))
 
     Swal.fire({
@@ -345,6 +374,6 @@ function logout() {
 // Initialize
 loadStats();
 loadBookings();
-
+getallbooking();
 
 
