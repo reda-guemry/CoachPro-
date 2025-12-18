@@ -5,19 +5,19 @@ fetch("../../BACK/API/selectallcoaches.php")
     .then(coaches => loadCoaches(coaches))
     .catch(error => console.error(error))
 
+function getallbooking() {
+    fetch("../../BACK/API/allboking.php")
+}
 
 
 
-let bookings = [
-    { id: 1, coach: "Ahmed Benali", date: "2025-12-20", time: "14:00-15:00", status: "pending" },
-    { id: 2, coach: "Sarah Alami", date: "2025-12-18", time: "10:00-11:00", status: "accepted" }
-];
+ 
 
 // Load stats
 function loadStats() {
-    document.getElementById('totalBookings').textContent = bookings.length;
-    document.getElementById('pendingBookings').textContent = bookings.filter(b => b.status === 'pending').length;
-    document.getElementById('acceptedBookings').textContent = bookings.filter(b => b.status === 'accepted').length;
+    document.getElementById('totalBookings').textContentlt  = bookings.length;
+    document.getElementById('pendingBookings').textContentlt  = bookings.filter(b => b.status === 'pending').length;    
+    document.getElementById('acceptedBookings').textContentlt  = bookings.filter(b => b.status === 'accepted').length;
     document.getElementById('availableCoaches').textContent = coaches.length;
 }
 
@@ -47,7 +47,7 @@ function loadCoaches(filteredCoaches) {
 
 }
 
-// Load bookings
+// Lolt ad bookings
 function loadBookings() {
     const bookingsList = document.getElementById('bookingsList');
     
@@ -56,7 +56,7 @@ function loadBookings() {
         return;
     }
 
-    bookingsList.innerHTML = bookings.map(booking => {
+    bookingsList.innerHTMLlt  = .map(booking => {
         const statusColors = {
             pending: 'bg-yellow-100 text-yellow-800',
             accepted: 'bg-green-100 text-green-800',
@@ -112,23 +112,53 @@ function closeBookingModal() {
 }
 
 // Load availabilities when date changes
-document.getElementById('bookingDate').addEventListener('change', function() {
-    const coachId = document.getElementById('selectedCoachId').value;
-    const date = this.value;
-    
-    // Simulated availabilities - Replace with API call
-    const availabilities = [
-        { id: 1, time: '09:00-10:00' },
-        { id: 2, time: '10:00-11:00' },
-        { id: 3, time: '14:00-15:00' },
-        { id: 4, time: '15:00-16:00' }
-    ];
+// document.getElementById('bookingDate').addEventListener('change', function() {
+//     const coachId = document.getElementById('selectedCoachId').value;
+//     const date = this.value;
 
-    const select = document.getElementById('availabilitySelect');
-    select.innerHTML = availabilities.map(a => 
-        `<option value="${a.id}">${a.time}</option>`
-    ).join('');
-});
+//     const select = document.getElementById('availabilitySelect');
+//     select.innerHTML = availabilities.map(a => 
+//         `<option value="${a.id}">${a.time}</option>`
+//     ).join('');
+// });
+
+// Option request 
+
+document.getElementById('bookingDate').addEventListener("change" , (e) => {
+    const dateselect = e.currentTarget.value ; 
+    const coachId = document.getElementById('selectedCoachId').value;
+    
+    fetch("../../BACK/API/dayoptionreser.php" , {
+        method : "POST" , 
+        headers : { "Content-Type": "application/json"} , 
+        body : JSON.stringify({
+            dateselect: dateselect,
+            coach_id: coachId
+        })
+    })
+        .then(rep => rep.json())
+        .then(data => {
+            const select = document.getElementById('availabilitySelect');
+            
+            if (data.status === "success") {
+                data.data.forEach(av => {
+                    select.innerHTML = '<option value="">Choisissez un horaire</option>';
+                    const option = document.createElement("option");
+
+                    option.value = av.availability_id;
+
+                    option.textContent = `${av.start_time} - ${av.end_time}`;
+
+                    select.appendChild(option);
+                });
+            } else {
+                select.innerHTML = `<option value="">${data.message}</option>`;
+                option.disabled = true;
+                select.appendChild(option);
+            }
+        })
+        .catch(error => console.error(error))
+})
 
 // Submit booking
 document.getElementById('bookingForm').addEventListener('submit', function(e) {
@@ -138,16 +168,24 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
     const coachName = document.getElementById('selectedCoachName').textContent;
     const date = document.getElementById('bookingDate').value;
     const availabilityId = document.getElementById('availabilitySelect').value;
-    const timeSlot = document.getElementById('availabilitySelect').options[document.getElementById('availabilitySelect').selectedIndex].text;
+    const timeSlot = document.getElementById('availabilitySelect').options[document.getElementById('availabilitySelect').selectedIndex].value;
 
     // Add booking (Replace with API call)
-    bookings.push({
-        id: bookings.length + 1,
-        coach: coachName,
+    let booking = {
+        coach_id: coachId,
         date: date,
         time: timeSlot,
         status: 'pending'
-    });
+    };
+    
+    fetch("../../BACK/API/addreservation.php" , {
+        method : "POST", 
+        headers :{ "Content-Type": "application/json" },
+        body : JSON.stringify(booking)
+    })
+        .then(rep => rep.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error))
 
     Swal.fire({
         icon: 'success',
@@ -235,7 +273,7 @@ function cancelBooking(bookingId) {
         cancelButtonText: 'Non'
     }).then((result) => {
         if (result.isConfirmed) {
-            const index = bookings.findIndex(b => b.id === bookingId);
+            const indexlt  = bookings.findIndex(b => b.id === bookingId);
             if (index > -1) {
                 bookings[index].status = 'cancelled';
                 loadBookings();
