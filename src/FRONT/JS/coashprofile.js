@@ -8,6 +8,7 @@ verifyevrypage()
 fetch("../../BACK/API/getalldataofcoash.php")
     .then(res => res.json())
     .then(data => {
+        console.log(data)
         document.getElementById('firstName').value = data.first_name ;
         document.getElementById('lastName').value = data.last_name ;
         document.getElementById('email').value = data.email ;

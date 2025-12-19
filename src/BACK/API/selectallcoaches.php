@@ -11,7 +11,7 @@
 
     foreach($result as $evrycoash ){
         $idcoash = $evrycoash["coach_id"] ; 
-        $check = $connect -> query ("SELECT c.coach_id , s.sport_name 
+        $check = $connect -> query ("SELECT s.sport_name 
                                             FROM coach_profile c
                                             INNER JOIN coach_sport cs ON cs.coach_id = c.coach_id 
                                             INNER JOIN sports s ON cs.sport_id = s.sport_id 
