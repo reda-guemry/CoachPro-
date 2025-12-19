@@ -22,11 +22,6 @@ function getallbooking() {
         })
         .catch(error => console.error(error))
 }
-// getallbooking()
-
-
-
-
  
 
 function loadStats(bookings) {
@@ -48,8 +43,11 @@ function loadCoaches(filteredCoaches) {
                 <img src="${coach.photo}" alt="${coach.first_name} ${coach.last_name}" class="w-20 h-20 rounded-full object-cover">
                 <div class="flex-1">
                     <h3 class="text-lg font-bold text-gray-800">${coach.first_name} ${coach.last_name}</h3>
-                    <p class="text-sm text-gray-600"><i class="fas fa-trophy text-purple-600 mr-1"></i>${coach.sport || ''}</p>
-                    <p class="text-sm text-gray-600"><i class="fas fa-certificate text-purple-600 mr-1"></i>${coach.certification || ''}</p>
+                    <p class="text-sm text-gray-600">
+                        <i class="fas fa-trophy text-purple-600 mr-1"></i>
+                        ${coach.sports.map(s => s.sport_name).join(', ')}
+                    </p>
+                    <p class="text-sm text-gray-600"><i class="fas fa-certificate text-purple-600 mr-1"></i>${coach.certification}</p>
                     <div class="flex items-center mt-2">
                         <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
                         <span class="text-sm font-semibold">${coach.rating || 'N/A'}</span>
@@ -145,11 +143,13 @@ function openBookingModal(coachId, coachName) {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('bookingDate').setAttribute('min', today);
 }
+window.openBookingModal = openBookingModal ; 
 
 function closeBookingModal() {
     document.getElementById('bookingModal').classList.add('hidden');
     document.getElementById('bookingForm').reset();
 }
+window.closeBookingModal = closeBookingModal ; 
 
 // Load availabilities when date changes
 // document.getElementById('bookingDate').addEventListener('change', function() {
@@ -179,20 +179,20 @@ document.getElementById('bookingDate').addEventListener("change" , (e) => {
         .then(rep => rep.json())
         .then(data => {
             const select = document.getElementById('availabilitySelect');
-            
+            select.innerHTML = '<option value="">Choisissez un horaire</option>';
+            console.log(data)
             if (data.status === "success") {
-                data.data.forEach(av => {
-                    select.innerHTML = '<option value="">Choisissez un horaire</option>';
+                const availableSlots = data.data.filter(av => av.status === 'available');
+                availableSlots.forEach(av => {
                     const option = document.createElement("option");
-
                     option.value = av.availability_id;
-
                     option.textContent = `${av.start_time} - ${av.end_time}`;
-
                     select.appendChild(option);
                 });
             } else {
-                select.innerHTML = `<option value="">${data.message}</option>`;
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = data.message;
                 option.disabled = true;
                 select.appendChild(option);
             }
@@ -243,6 +243,7 @@ function openReviewModal(bookingId) {
     document.getElementById('reviewBookingId').value = bookingId;
     document.getElementById('reviewModal').classList.remove('hidden');
 }
+window.openReviewModal = openReviewModal ; 
 
 function closeReviewModal() {
     document.getElementById('reviewModal').classList.add('hidden');
@@ -333,6 +334,7 @@ function cancelBooking(bookingId) {
         }
     });
 }
+window.cancelBooking = cancelBooking ; 
 
 // Search and filter
 document.getElementById('searchCoach').addEventListener('input', function(e) {
@@ -386,10 +388,9 @@ function logout() {
         }
     });
 }
+window.logout = logout ; 
 
-// Initialize
-// loadStats();
-// loadBookings();
+
 getallbooking();
 
 

@@ -1,6 +1,23 @@
 
 
 
+fetch("../../BACK/API/getallsportdisp.php") 
+    .then(rep => rep.json())
+    .then(data => {
+        console.log(data)
+        const sportifcheck = document.querySelector("#sportselect") ; 
+        sportifcheck.innerHTML = data.map(ele => {
+            return`
+                <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
+                    <input type="checkbox" name="sports" value="${ele.sport_id}" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500" >
+                    <span class="ml-3 text-gray-700">${ele.sport_name}</span>
+                </label>
+            `
+        }).join('') ; 
+    })
+    .catch(error => console.error(error))
+
+
 const roleInputs = document.querySelectorAll('input[name="role"]');
 const coachFields = document.getElementById('coachFields');
 const coachInputs = coachFields.querySelectorAll('input, textarea');
@@ -72,9 +89,11 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
     const BioCoach = document.getElementById("bio").value ; 
     const experiencecoach = document.getElementById("experienceYears").value ;
     const profilePhoto = document.getElementById("photo").files[0] ; 
-    const certificate = document.getElementById("certifications").files[0] ; 
+    const certificate = document.getElementById("certifications").value; 
     const terms = document.getElementById('terms').checked ;
+    const cpecialiter = Array.from(document.querySelectorAll('input[name="sports"]:checked')).map(ele => ele.value);
     
+
     const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -83,10 +102,15 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
     
     document.querySelectorAll('.text-red-500').forEach(error => error.classList.add('hidden'));
     
+    if(cpecialiter.length == 0) {
+        document.getElementById('sportsError').classList.remove('hidden');
+        isValid = false;
+    }
+
     if (!nameRegex.test(prenom)) {
         document.getElementById('prenomError').classList.remove('hidden');
         isValid = false;
-    }
+    }   
     
     if (!nameRegex.test(nom)) {
         document.getElementById('nomError').classList.remove('hidden');
@@ -129,6 +153,8 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
             datauser.append("experiencecoach" , experiencecoach) ; 
             datauser.append("profilePhoto" , profilePhoto) ;
             datauser.append("certificate" , certificate) ;
+            datauser.append("cpecialiter" , JSON.stringify(cpecialiter)) ;
+
         }
 
         signinfetch(datauser);

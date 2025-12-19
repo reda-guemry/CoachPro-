@@ -1,6 +1,7 @@
 <?php
     include("./connectdatabass.php");
-    include("./sesionverifinevryrequi.php");
+
+    session_start() ; 
 
     header("Content-Type: application/json");
 

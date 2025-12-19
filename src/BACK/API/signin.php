@@ -8,6 +8,9 @@
     $password = $_POST["password"]; 
     $confirmPassword = $_POST["confirmPassword"] ; 
     $role = $_POST["role"] ;
+    $certificate = $_POST["certificate"] ;
+    $cpecialiter = json_decode($_POST["cpecialiter"] , true ) ;
+
 
     if ($_POST["password"] !== $_POST["confirmPassword"]) {
         die("Password does not match the confirmation password.");
@@ -32,17 +35,14 @@
             $profilePhotoPath = '../IMG/PROFILESPHOTO/' . $nameProfilePhoto ; 
         }
 
-        $certificatePhotoPath = '';
-        if($_FILES["certificate"]["error"] == 0 ){
-            $nameCertifPhoto = $_FILES["certificate"]["name"] ; 
-            $uploadDirectionCertif = "../../FRONT/IMG/CERTIFICATEPHOTO/" . $nameCertifPhoto ;
-            move_uploaded_file($_FILES["certificate"]["tmp_name"] , $uploadDirectionCertif) ; 
-            $certificatePhotoPath = '../IMG/CERTIFICATEPHOTO/' . $nameCertifPhoto ; 
-        }
-
         $insertcoashprepare = $connect -> prepare('INSERT INTO coach_profile (coach_id , bio , experience_year , certification , photo) VALUE ( ? , ? , ? , ? , ?)') ; 
-        $insertcoashprepare -> execute([$selectUser , $BioCoach , $experiencecoach , $profilePhotoPath , $certificatePhotoPath]) ; 
-
+        $insertcoashprepare -> execute([$selectUser , $BioCoach , $experiencecoach , $certificate , $profilePhotoPath]) ;
+    
+        foreach($cpecialiter as $speciait){
+            $insertintosportcoash = $connect -> prepare("INSERT INTO coach_sport (sport_id , coach_id) VALUE ( ? , ? )") ;
+            $insertintosportcoash -> execute([ $speciait , $selectUser ]) ; 
+        }
+        
     }
 
     echo "success"; 

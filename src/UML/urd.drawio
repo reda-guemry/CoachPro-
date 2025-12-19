@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Database Schema" id="database-schema">
-        <mxGraphModel dx="1533" dy="751" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
+        <mxGraphModel dx="2402" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -86,7 +86,7 @@
                     <mxGeometry y="180" width="280" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="bookings-table" value="&lt;b&gt;bookings&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-390" y="690" width="320" height="210" as="geometry"/>
+                    <mxGeometry x="-390" y="690" width="320" height="180" as="geometry"/>
                 </mxCell>
                 <mxCell id="bookings-1" value="booking_id INT PK AUTO_INCREMENT" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1" parent="bookings-table" vertex="1">
                     <mxGeometry y="30" width="320" height="30" as="geometry"/>
@@ -102,9 +102,6 @@
                 </mxCell>
                 <mxCell id="bookings-5" value="status ENUM(&#39;pending&#39;, &#39;accepted&#39;, &#39;rejected&#39;, &#39;cancelled&#39;)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="bookings-table" vertex="1">
                     <mxGeometry y="150" width="320" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="bookings-6" value="created_at DATETIME" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="bookings-table" vertex="1">
-                    <mxGeometry y="180" width="320" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="reviews-table" value="&lt;b&gt;reviews&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-346" y="1100" width="240" height="120" as="geometry">
@@ -168,9 +165,9 @@
                         <mxPoint x="60" y="770" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="24" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0.451;exitY=0.987;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="bookings-6" target="reviews-table" edge="1">
+                <mxCell id="24" value="" style="fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;exitX=0.451;exitY=0.987;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" parent="1" target="reviews-table" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
-                        <mxPoint x="-100" y="1200" as="sourcePoint"/>
+                        <mxPoint x="-245.67999999999984" y="899.6100000000001" as="sourcePoint"/>
                         <mxPoint x="-110" y="1000" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>

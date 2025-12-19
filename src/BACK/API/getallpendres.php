@@ -1,12 +1,14 @@
 <?php
     include("./connectdatabass.php");
-    include("./sesionverifinevryrequi.php");
+
+    session_start() ; 
 
     header("Content-Type: application/json");
 
     
     
     $sportif_id = $_SESSION["usermpgine"];
+
 
 
     $stmt = $connect->prepare("SELECT  b.booking_id, b.status, u.first_name, u.last_name, a.availabilites_date, a.start_time, a.end_time

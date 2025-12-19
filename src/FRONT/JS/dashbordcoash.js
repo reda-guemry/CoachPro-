@@ -292,6 +292,7 @@ function acceptBooking(bookingId) {
         }
     });
 }
+window.acceptBooking = acceptBooking ; 
 
 // Reject booking
 function rejectBooking(bookingId) {
@@ -327,6 +328,7 @@ function rejectBooking(bookingId) {
         }
     });
 }
+window.rejectBooking = rejectBooking;
 
 // Delete availability
 function deleteAvailability(availId) {
@@ -361,6 +363,8 @@ function deleteAvailability(availId) {
         }
     });
 }
+
+window.deleteAvailability = deleteAvailability;
 
 // Set minimum date for availability form
 const today = new Date().toISOString().split('T')[0];

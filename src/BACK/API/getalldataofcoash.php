@@ -1,9 +1,8 @@
 <?php
     include("./connectdatabass.php");
-    include("verificateecryreauest.php") ; 
 
-    requireRole("coach") ; 
-
+    session_start() ; 
+    
     header("Content-Type: application/json");
 
     $coach_id = $_SESSION["usermpgine"];

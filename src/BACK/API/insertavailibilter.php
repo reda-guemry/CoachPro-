@@ -1,7 +1,9 @@
 <?php 
 
     include("./connectdatabass.php") ; 
-    include("./sesionverifinevryrequi.php") ; 
+
+    session_start() ; 
+     
 
     header("Content-Type: application/json");
 
@@ -21,5 +23,5 @@
     $datareponse = $connect -> query ("SELECT * FROM availabilites WHERE availability_id ='$idinitial'") ;
     $datareponse = $datareponse -> fetch() ;
 
-    echo json_encode(["status" => "success", "message" => "Availability added" , "cokies " => $reponse , "datainsert" => $datareponse]); 
+    echo json_encode(["status" => "success", "message" => "Availability added" , "datainsert" => $datareponse]); 
 

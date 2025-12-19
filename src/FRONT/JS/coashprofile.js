@@ -25,6 +25,21 @@ fetch("../../BACK/API/getalldataofcoash.php")
     })
     .catch(error => console.log(error))
 
+fetch("../../BACK/API/getallsportdisp.php") 
+    .then(rep => rep.json())
+    .then(data => {
+        const sportifcheck = document.querySelector("#sportselect") ; 
+        sportifcheck.innerHTML = data.map(ele => {
+            return`
+                <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
+                    <input type="checkbox" name="sports" value="${ele.sport_id}" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500" >
+                    <span class="ml-3 text-gray-700">${ele.sport_name}</span>
+                </label>
+            `
+        }).join('') ; 
+    })
+    .catch(error => console.error(error))
+
 const bioTextarea = document.getElementById('bio');
 const bioCount = document.getElementById('bioCount');
 
@@ -83,6 +98,7 @@ function previewPhoto(event) {
         reader.readAsDataURL(file);
     }
 }
+window.previewPhoto = previewPhoto ; 
 
 // Form validation and submission
 document.getElementById('profileForm').addEventListener('submit', function(e) {
@@ -256,6 +272,8 @@ function logout() {
         }
     });
 }
+
+window.resetForm = resetForm ;
 
 // Initialize display
 document.getElementById('displayName').textContent = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;

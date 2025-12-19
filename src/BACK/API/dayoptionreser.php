@@ -1,7 +1,7 @@
 <?php
 
     include("./connectdatabass.php") ; 
-    include("./sesionverifinevryrequi.php") ;
+    
 
     header("Content-Type: application/json");
 
@@ -18,13 +18,7 @@
 
     
     if (count($reponsedata) > 0) {
-        echo json_encode([
-            "status" => "success",
-            "data" => $reponsedata
-        ]);
+        echo json_encode([ "status" => "success", "data" => $reponsedata]);
     } else {
-        echo json_encode([
-            "status" => "empty",
-            "message" => "Aucune disponibilité pour ce jour"
-        ]);
+        echo json_encode([ "status" => "empty", "message" => "Aucune disponibilité pour ce jour"]);
     }
