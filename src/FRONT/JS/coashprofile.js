@@ -269,6 +269,7 @@ function resetForm() {
         }
     });
 }
+window.resetForm = resetForm ;
 
 // Logout
 function logout() {
@@ -283,12 +284,14 @@ function logout() {
         cancelButtonText: 'Non'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = 'login.html';
+            fetch("../../BACK/API/logout.php")
+                .then(rep => rep.text())
+                .then(reponse => reponse == "success" ? verifyevrypage() : console.log(reponse))
+                .catch(error => console.error(error))
         }
     });
 }
-
-window.resetForm = resetForm ;
+window.logout = logout ;  
 
 // Initialize display
 document.getElementById('displayName').textContent = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;

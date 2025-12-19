@@ -1,4 +1,6 @@
 import verifyevrypage from './requestvalidsesion.js';
+import logout from './logout.js';
+window.logout = logout;
 
 verifyevrypage()
 
@@ -369,24 +371,6 @@ window.deleteAvailability = deleteAvailability;
 // Set minimum date for availability form
 const today = new Date().toISOString().split('T')[0];
 document.getElementById('availDate').setAttribute('min', today);
-
-// Logout
-function logout() {
-    Swal.fire({
-        title: 'Déconnexion',
-        text: "Voulez-vous vous déconnecter?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#7c3aed',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Non'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = 'login.html';
-        }
-    });
-}
 
 // Initialize
 // loadStats();

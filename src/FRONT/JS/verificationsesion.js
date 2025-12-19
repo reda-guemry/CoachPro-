@@ -1,4 +1,3 @@
-
 export default function verifysesionlog() {  
     
     fetch("../../BACK/API/sesionverify.php")

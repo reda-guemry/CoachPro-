@@ -1,6 +1,8 @@
 // Sample data - Replace with actual API calls 
 
 import verifyevrypage from './requestvalidsesion.js';
+import logout from './logout.js';
+window.logout = logout;
 
 verifyevrypage() ; 
 
