@@ -4,16 +4,13 @@
 
     session_start();
 
-    $sessionId = session_id();
-
-    $check = $connect->prepare("SELECT * FROM sesionses WHERE sesion_id = ?");
-
-    $check->execute([$sessionId]);
-
-    if(!$check->fetch()) {
-        session_destroy();
-        echo "invalid" ;
-        exit() ;  
-    }else{
-        echo $_SESSION["rolelogine"] ;
+    if (!isset($_SESSION['usermpgine'])) {
+        echo "login.html" ; 
+        exit();
+    }
+    function requireRole($role) {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== $role) {
+            echo "login.html" ; 
+            exit();
+        }
     }

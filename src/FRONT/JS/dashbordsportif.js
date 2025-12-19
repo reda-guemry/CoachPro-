@@ -2,7 +2,10 @@
 
 fetch("../../BACK/API/selectallcoaches.php")
     .then(rep => rep.json())
-    .then(coaches => loadCoaches(coaches))
+    .then(coaches => {
+        loadCoaches(coaches) ; 
+        loadStatscoach(coaches) ; 
+    })
     .catch(error => console.error(error))
 
 
@@ -26,8 +29,11 @@ function loadStats(bookings) {
     document.getElementById('totalBookings').textContent  = bookings.length;
     document.getElementById('pendingBookings').textContent  = bookings.filter(b => b.status === 'pending').length;    
     document.getElementById('acceptedBookings').textContent  = bookings.filter(b => b.status === 'accepted').length;
-    // document.getElementById('availableCoaches').textContent = coaches.length;
 }
+function loadStatscoach(coach) {
+    document.getElementById('availableCoaches').textContent = coach.length;
+}
+
 
 // Load coaches
 function loadCoaches(filteredCoaches) {

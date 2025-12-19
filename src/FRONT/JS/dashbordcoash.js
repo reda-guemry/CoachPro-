@@ -4,7 +4,7 @@ function getallavai() {
         .then(rep => rep.json())
         .then(data => {  
             loadAvailabilities(data.datainsert);
-            loadStats(data);  
+            loadStats(data.datainsert);  
         })
         .catch(error =>console.error(error))
 }
@@ -13,19 +13,25 @@ function getallpendigres() {
     fetch("../../BACK/API/getallpendres.php")
         .then(rep => rep.json())
         .then(data =>{
-            loadPendingRequests(data)
+            loadPendingRequests(data) ; 
+            loadStatspanding(data) ; 
         })
         .catch(error =>console.error(error))
 }
 
+function getAcceptedSessions() {
+    fetch("../../BACK/API/acceptedBookings.php")
+        .then(res => res.json())
+        .then(data => loadAcceptedSessions(data))
+        .catch(err => console.error(err));
+}
+
 // Load stats
 function loadStats(data) {
-    document.getElementById('pendingRequests').textContent = data.filter(b => b.status === 'pending').length;
-    
     const today = new Date().toISOString().split('T')[0];
     const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
     
-    document.getElementById('todaySessions').textContent = data.filter(s => s.availabilites_date === today).length;
+    document.getElementById('todaySessions').textContent = data.filter(s => s.availabilites_date === today ).length;
     document.getElementById('tomorrowSessions').textContent = data.filter(s => s.availabilites_date === tomorrow).length;
     
     // const avgRating = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
@@ -37,6 +43,9 @@ function loadStats(data) {
         document.getElementById('nextSessionAlert').classList.remove('hidden');
         document.getElementById('nextSessionInfo').textContent = `${nextSession.sportif} - ${nextSession.date} à ${nextSession.time}`;
     }
+}
+function loadStatspanding(data) {
+    document.getElementById('pendingRequests').textContent = data.filter(b => b.status === 'pending').length;
 }
 
 // Load pending requests
@@ -86,26 +95,30 @@ function loadPendingRequests(data) {
 }
 
 // Load accepted sessions
-function loadAcceptedSessions() {
+function loadAcceptedSessions(data) {
     const list = document.getElementById('acceptedSessionsList');
     
-    if (acceptedSessions.length === 0) {
+    if (data.length === 0) {
         list.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune séance validée</p>';
         return;
     }
 
-    list.innerHTML = acceptedSessions.map(session => `
+     list.innerHTML = data.map(session => {
+        const sportifName = `${session.first_name} ${session.last_name}`;
+        const timeRange = `${session.start_time} - ${session.end_time}`;
+
+        return `
         <div class="border-2 border-green-200 bg-green-50 rounded-lg p-4">
             <div class="flex justify-between items-start">
                 <div>
                     <h4 class="font-bold text-gray-800">
-                        <i class="fas fa-user text-purple-600 mr-2"></i>${session.sportif}
+                        <i class="fas fa-user text-purple-600 mr-2"></i>${sportifName}
                     </h4>
                     <p class="text-sm text-gray-600 mt-1">
-                        <i class="fas fa-calendar mr-1"></i>${session.date}
+                        <i class="fas fa-calendar mr-1"></i>${session.availabilites_date}
                     </p>
                     <p class="text-sm text-gray-600">
-                        <i class="fas fa-clock mr-1"></i>${session.time}
+                        <i class="fas fa-clock mr-1"></i>${timeRange}
                     </p>
                 </div>
                 <span class="px-3 py-1 bg-green-200 text-green-800 rounded-full text-xs font-semibold">
@@ -113,7 +126,8 @@ function loadAcceptedSessions() {
                 </span>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Load availabilities
@@ -330,7 +344,6 @@ function deleteAvailability(availId) {
             })
                 .then(rep => rep.text())
                 .then(data => {
-                    console.log(data)
                     getallpendigres();
                     getallavai() ;
                     Swal.fire({
@@ -375,3 +388,4 @@ function logout() {
 // loadReviews();
 getallpendigres() 
 getallavai()
+getAcceptedSessions()
