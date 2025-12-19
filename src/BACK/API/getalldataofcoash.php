@@ -14,7 +14,7 @@
     $stmt->execute([$coach_id]);
     $acceptedBookings = $stmt->fetch();
 
-    $getsports = $connect->prepare("SELECT cs.sport_name 
+    $getsports = $connect->prepare("SELECT cs.sport_id 
                                            FROM coach_profile cp
                                            INNER JOIN coach_sport c ON  c.coach_id = cp.coach_id
                                            INNER JOIN sports cs ON cs.sport_id = c.sport_id 

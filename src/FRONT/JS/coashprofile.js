@@ -4,42 +4,46 @@ import verifyevrypage from './requestvalidsesion.js';
 
 verifyevrypage()
 
+function getcoashdata() { 
+    fetch("../../BACK/API/getalldataofcoash.php")
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('firstName').value = data.first_name ;
+            document.getElementById('lastName').value = data.last_name ;
+            document.getElementById('email').value = data.email ;
+            document.getElementById('bio').value = data.bio ;
+            document.getElementById('experienceYears').value = data.experience_year ;
+            document.getElementById('certifications').value = data.certification ;
 
-fetch("../../BACK/API/getalldataofcoash.php")
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        document.getElementById('firstName').value = data.first_name ;
-        document.getElementById('lastName').value = data.last_name ;
-        document.getElementById('email').value = data.email ;
-        document.getElementById('bio').value = data.bio ;
-        document.getElementById('experienceYears').value = data.experience_year ;
-        document.getElementById('certifications').value = data.certification ;
+            if (data.photo) {
+                document.getElementById('profilePhoto').src = data.photo;
+            }
 
-        if (data.photo) {
-            document.getElementById('profilePhoto').src = data.photo;
-        }
+            updateBioCount();
+            document.getElementById('displayName').textContent = `${data.first_name} ${data.last_name}`;
+            document.getElementById('displayEmail').textContent = data.email;
 
-        updateBioCount();
-        document.getElementById('displayName').textContent = `${data.first_name} ${data.last_name}`;
-        document.getElementById('displayEmail').textContent = data.email;
-    })
-    .catch(error => console.log(error))
 
-fetch("../../BACK/API/getallsportdisp.php") 
-    .then(rep => rep.json())
-    .then(data => {
-        const sportifcheck = document.querySelector("#sportselect") ; 
-        sportifcheck.innerHTML = data.map(ele => {
-            return`
-                <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
-                    <input type="checkbox" name="sports" value="${ele.sport_id}" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500" >
-                    <span class="ml-3 text-gray-700">${ele.sport_name}</span>
-                </label>
-            `
-        }).join('') ; 
-    })
-    .catch(error => console.error(error))
+            const userSports = data.sports.map(s => s.sport_id);
+
+            fetch("../../BACK/API/getallsportdisp.php")
+                .then(res => res.json())
+                .then(allSports => {
+                    const sportifcheck = document.querySelector("#sportselect");
+                    sportifcheck.innerHTML = allSports.map(ele => {
+                        const checked = userSports.includes(ele.sport_id) ? 'checked' : '';
+                        return `
+                            <label class="flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-purple-600 transition duration-300">
+                                <input type="checkbox" name="sports" value="${ele.sport_id}" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500" ${checked}>
+                                <span class="ml-3 text-gray-700">${ele.sport_name}</span>
+                            </label>
+                        `;
+                    }).join('');
+                });
+        })
+        .catch(error => console.log(error))
+}
+getcoashdata()
 
 const bioTextarea = document.getElementById('bio');
 const bioCount = document.getElementById('bioCount');
@@ -115,6 +119,7 @@ document.getElementById('profileForm').addEventListener('submit', function(e) {
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    const photoInput = document.getElementById("photoInput");
 
     // Get selected sports
     const selectedSports = Array.from(document.querySelectorAll('input[name="sports"]:checked')).map(cb => cb.value);
@@ -150,18 +155,6 @@ document.getElementById('profileForm').addEventListener('submit', function(e) {
         });
         return;
     }
-
-    // Validate bio
-    if (bio.length < 50) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: 'La biographie doit contenir au moins 50 caractères',
-            confirmButtonColor: '#7c3aed'
-        });
-        return;
-    }
-
     // Validate sports selection
     if (selectedSports.length === 0) {
         document.getElementById('sportsError').classList.remove('hidden');
@@ -197,36 +190,58 @@ document.getElementById('profileForm').addEventListener('submit', function(e) {
         }
     }
 
-    // Prepare data to send (Replace with actual API call)
-    const profileData = {
-        firstName,
-        lastName,
-        email,
-        bio,
-        experienceYears,
-        certifications,
-        sports: selectedSports,
-        ...(newPassword && { newPassword })
-    };
+    const profileFormData = new FormData();
 
-    console.log('Profile Data:', profileData);
+    profileFormData.append("firstName", firstName);
+    profileFormData.append("lastName", lastName);
+    profileFormData.append("email", email);
+    profileFormData.append("bio", bio);
+    profileFormData.append("experienceYears", experienceYears);
+    profileFormData.append("certifications", certifications);
 
-    // Show success message
-    Swal.fire({
-        icon: 'success',
-        title: 'Profil mis à jour!',
-        text: 'Vos modifications ont été enregistrées avec succès',
-        confirmButtonColor: '#7c3aed'
-    }).then(() => {
-        // Update display name
-        document.getElementById('displayName').textContent = `${firstName} ${lastName}`;
-        document.getElementById('displayEmail').textContent = email;
-
-        // Clear password fields
-        document.getElementById('currentPassword').value = '';
-        document.getElementById('newPassword').value = '';
-        document.getElementById('confirmNewPassword').value = '';
+    selectedSports.forEach(sportId => {
+        profileFormData.append("sports[]", sportId); 
     });
+
+    if (newPassword) profileFormData.append("newPassword", newPassword);
+    if (currentPassword) profileFormData.append("currentPassword", currentPassword);
+
+    if (photoInput.files[0]) {
+        profileFormData.append("photo", photoInput.files[0]);
+    }
+
+    
+    fetch("../../BACK/API/updateprofile.php", {
+        method: "POST",
+        body: profileFormData
+    })
+        .then(res => res.json())
+        .then(response => {
+            console.log(response)
+            if (response.success) {
+                getcoashdata() 
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Profil mis à jour!',
+                    text: response.message || 'Vos modifications ont été enregistrées avec succès',
+                    confirmButtonColor: '#7c3aed'
+                    
+                }).then(() => {
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmNewPassword').value = '';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: response.message || 'Erreur lors de la mise à jour du profil',
+                    confirmButtonColor: '#7c3aed'
+                });
+            }
+        })
+        .catch(error => console.error(error));
+
 });
 
 // Reset form
@@ -242,9 +257,8 @@ function resetForm() {
         cancelButtonText: 'Annuler'
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById('profileForm').reset();
+            getcoashdata()
             updateBioCount();
-            
             Swal.fire({
                 icon: 'success',
                 title: 'Réinitialisé!',
