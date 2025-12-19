@@ -1,5 +1,9 @@
 // Sample data - Replace with actual API calls 
 
+import verifyevrypage from './requestvalidsesion.js';
+
+verifyevrypage() ; 
+
 fetch("../../BACK/API/selectallcoaches.php")
     .then(rep => rep.json())
     .then(coaches => {

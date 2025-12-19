@@ -1,3 +1,7 @@
+import verifyevrypage from './requestvalidsesion.js';
+
+verifyevrypage()
+
 
 function getallavai() {  
     fetch("../../BACK/API/getallavaili.php")

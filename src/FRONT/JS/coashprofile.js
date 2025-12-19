@@ -1,5 +1,10 @@
 // Character counter for bio
 
+import verifyevrypage from './requestvalidsesion.js';
+
+verifyevrypage()
+
+
 fetch("../../BACK/API/getalldataofcoash.php")
     .then(res => res.json())
     .then(data => {
