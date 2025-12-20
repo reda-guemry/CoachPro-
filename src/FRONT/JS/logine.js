@@ -12,6 +12,7 @@ function loginrequest(datajson) {
         .then(rep => rep.text())
         .then(data => {
             if(data == "success"){
+                document.getElementById('loginForm').reset()
                 verifysesionlog() ;
             }else {
                 window.location.href = "login.html" ; 
@@ -68,5 +69,6 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     if (isValid) {
         const logindata = new FormData(document.getElementById('loginForm')) ; 
         loginrequest(logindata) ; 
+
     }
 });

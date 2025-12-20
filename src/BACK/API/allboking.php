@@ -10,7 +10,7 @@
     $sportif_id = $_SESSION["usermpgine"] ;
 
 
-    $selectallbock = $connect -> prepare ("SELECT u.first_name , u.last_name , b.booking_id , b.status , a.availabilites_date , a.start_time , a.end_time
+    $selectallbock = $connect -> prepare ("SELECT u.user_id , u.first_name , u.last_name , b.booking_id , b.status , a.availabilites_date , a.start_time , a.end_time
                                                 FROM users u 
                                                 INNER JOIN bookings b ON u.user_id = b.coach_id 
                                                 INNER JOIN availabilites a ON a.availability_id = b.availability_id

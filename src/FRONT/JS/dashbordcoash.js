@@ -28,9 +28,22 @@ function getallpendigres() {
 function getAcceptedSessions() {
     fetch("../../BACK/API/acceptedBookings.php")
         .then(res => res.json())
-        .then(data => loadAcceptedSessions(data))
+        .then(data => {
+            loadAcceptedSessions(data)
+            console.log(data)
+        })
         .catch(err => console.error(err));
 }
+function allreviewfetch() {
+    fetch("../../BACK/API/getallreviewcoash.php")
+        .then(rep => rep.json())
+        .then(data => {
+            console.log(data) ; 
+            loadReviews(data) ; 
+        })
+        .catch(err => console.error(err));
+}
+allreviewfetch() 
 
 // Load stats
 function loadStats(data) {
@@ -177,7 +190,7 @@ function loadAvailabilities(data) {
 }
 
 // Load reviews
-function loadReviews() {
+function loadReviews(reviews) {
     const list = document.getElementById('reviewsList');
     
     if (reviews.length === 0) {
@@ -188,18 +201,24 @@ function loadReviews() {
     list.innerHTML = reviews.map(review => `
         <div class="border-2 border-gray-200 rounded-lg p-3">
             <div class="flex justify-between items-start mb-2">
-                <p class="font-semibold text-gray-800 text-sm">${review.sportif}</p>
+                <p class="font-semibold text-gray-800 text-sm">
+                    ${review.first_name} ${review.last_name}
+                </p>
+
                 <div class="flex items-center">
-                    ${Array(review.rating).fill().map(() => '<i class="fas fa-star text-yellow-500 text-xs"></i>').join('')}
-                    ${Array(5 - review.rating).fill().map(() => '<i class="fas fa-star text-gray-300 text-xs"></i>').join('')}
+                    ${Array(review.ratting).fill().map(() =>
+                        '<i class="fas fa-star text-yellow-500 text-xs"></i>'
+                    ).join('')}
+                    ${Array(5 - review.ratting).fill().map(() =>
+                        '<i class="fas fa-star text-gray-300 text-xs"></i>'
+                    ).join('')}
                 </div>
             </div>
-            <p class="text-gray-600 text-xs mb-1">${review.comment}</p>
-            <p class="text-gray-400 text-xs">${review.date}</p>
+
+            <p class="text-gray-600 text-xs mb-1">${review.commentaire}</p>
         </div>
     `).join('');
 }
-
 // Add availability
 document.getElementById('availabilityForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -278,6 +297,7 @@ function acceptBooking(bookingId) {
                     console.log(data)
                     getallpendigres();
                     getallavai() ;
+                    getAcceptedSessions() ;
                     Swal.fire({
                         icon: 'success',
                         title: 'Acceptée!',
@@ -286,11 +306,6 @@ function acceptBooking(bookingId) {
                     });
                 })
                 .catch(error => console.error(error))
-
-                // loadPendingRequests();
-                // loadAcceptedSessions();
-                // loadAvailabilities();
-                // loadStats();
         }
     });
 }
@@ -319,6 +334,7 @@ function rejectBooking(bookingId) {
                     console.log(data)
                     getallpendigres();
                     getallavai() ;
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Refusée!',

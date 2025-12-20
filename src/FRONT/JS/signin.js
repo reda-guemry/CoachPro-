@@ -59,7 +59,14 @@ function signinfetch(datajson) {
             body : datajson
         })
         .then(rep => rep.text())
-        .then(data => data == "success" ? window.location.href = "login.html" : console.log(data))
+        .then(data => {
+            if(data == "success"){
+                document.getElementById('signupForm').reset();
+                window.location.href = "login.html" 
+            }else {
+                console.log(data) 
+            }
+        })
         .catch(eroor => console.log(eroor))
 }
 
@@ -159,6 +166,7 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
 
         }
 
+        document.getElementById('signupForm').reset();   
         signinfetch(datauser);
     }
 

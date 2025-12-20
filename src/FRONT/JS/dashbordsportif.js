@@ -86,6 +86,8 @@ function loadBookings(data) {
         cancelled: 'Annulée'
     };
 
+    console.log(data) ; 
+
     bookingsList.innerHTML = data.map(booking => {
 
         const coachName = `${booking.first_name} ${booking.last_name}`;
@@ -113,7 +115,7 @@ function loadBookings(data) {
                 <div class="flex space-x-2 mt-3">
                     ${booking.status === 'accepted' ? `
                         <button 
-                            onclick="openReviewModal(${booking.booking_id})"
+                            onclick="openReviewModal(${booking.booking_id} , ${booking.user_id})"
                             class="flex-1 bg-purple-600 hover:bg-purple-700 
                             text-white px-3 py-1 rounded text-xs transition duration-300">
                             <i class="fas fa-star mr-1"></i>Avis
@@ -151,19 +153,6 @@ function closeBookingModal() {
     document.getElementById('bookingForm').reset();
 }
 window.closeBookingModal = closeBookingModal ; 
-
-// Load availabilities when date changes
-// document.getElementById('bookingDate').addEventListener('change', function() {
-//     const coachId = document.getElementById('selectedCoachId').value;
-//     const date = this.value;
-
-//     const select = document.getElementById('availabilitySelect');
-//     select.innerHTML = availabilities.map(a => 
-//         `<option value="${a.id}">${a.time}</option>`
-//     ).join('');
-// });
-
-// Option request 
 
 document.getElementById('bookingDate').addEventListener("change" , (e) => {
     const dateselect = e.currentTarget.value ; 
@@ -240,8 +229,9 @@ document.getElementById('bookingForm').addEventListener('submit', function(e) {
 });
 
 // Review Modal
-function openReviewModal(bookingId) {
+function openReviewModal(bookingId , coash_id) {
     document.getElementById('reviewBookingId').value = bookingId;
+    document.getElementById('coash_id').value = coash_id;
     document.getElementById('reviewModal').classList.remove('hidden');
 }
 window.openReviewModal = openReviewModal ; 
@@ -254,11 +244,13 @@ function closeReviewModal() {
         star.classList.add('text-gray-300');
     });
 }
+window.closeReviewModal = closeReviewModal ; 
 
 // Rating stars
 document.querySelectorAll('#ratingStars i').forEach(star => {
     star.addEventListener('click', function() {
         const rating = this.getAttribute('data-rating');
+        //modifier input value 
         document.getElementById('ratingValue').value = rating;
         
         document.querySelectorAll('#ratingStars i').forEach(s => {
@@ -279,6 +271,8 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
     
     const rating = document.getElementById('ratingValue').value;
     const comment = document.getElementById('reviewComment').value;
+    const reviewBookingId = document.getElementById("reviewBookingId").value
+    const coash_id = document.getElementById("coash_id").value
 
     if (!rating) {
         Swal.fire({
@@ -290,15 +284,33 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
         return;
     }
 
-    // Submit review (Replace with API call)
-    Swal.fire({
-        icon: 'success',
-        title: 'Merci!',
-        text: 'Votre avis a été enregistré.',
-        confirmButtonColor: '#7c3aed'
-    });
+    const datarating = new FormData() ; 
 
-    closeReviewModal();
+    datarating.append("rating" , rating) ; 
+    datarating.append("comment" , comment) ; 
+    datarating.append("reviewBookingId" , reviewBookingId) ; 
+    datarating.append("coash_id" , coash_id) ; 
+
+
+    fetch("../../BACK/API/addreviemtocoash.php" , {
+        method : "POST" ,
+        body : datarating 
+    })
+        .then(rep => rep.text())
+        .then(data => {
+            if(data = 'succes') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Merci!',
+                    text: 'Votre avis a été enregistré.',
+                    confirmButtonColor: '#7c3aed'
+                });
+                closeReviewModal();
+            }
+
+        })
+        .catch(error => console.log(error))
+
 });
 
 // Cancel booking
