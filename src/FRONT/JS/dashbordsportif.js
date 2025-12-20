@@ -1,4 +1,3 @@
-// Sample data - Replace with actual API calls 
 
 import verifyevrypage from './requestvalidsesion.js';
 import logout from './logout.js';
@@ -372,25 +371,6 @@ document.getElementById('searchCoach').addEventListener('input', function(e) {
 document.getElementById('sportFilter').addEventListener('change', function() {
     loadCoaches(this.value);
 });
-
-// Logout
-function logout() {
-    Swal.fire({
-        title: 'Déconnexion',
-        text: "Voulez-vous vous déconnecter?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#7c3aed',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Non'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = 'login.html';
-        }
-    });
-}
-window.logout = logout ; 
 
 
 getallbooking();

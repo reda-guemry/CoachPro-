@@ -102,9 +102,11 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
     
     document.querySelectorAll('.text-red-500').forEach(error => error.classList.add('hidden'));
     
-    if(cpecialiter.length == 0) {
-        document.getElementById('sportsError').classList.remove('hidden');
-        isValid = false;
+    if (Roleuser == "coach") {
+        if(cpecialiter.length == 0) {
+            document.getElementById('sportsError').classList.remove('hidden');
+            isValid = false;
+        }
     }
 
     if (!nameRegex.test(prenom)) {

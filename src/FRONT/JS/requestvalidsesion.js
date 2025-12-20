@@ -6,4 +6,5 @@ export default function verifyevrypage() {
             window.location.href = data ; 
         }
     })
+    .catch(error => console.error(error)) 
 }

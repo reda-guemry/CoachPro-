@@ -5,8 +5,6 @@
 
     header("Content-Type: application/json");
 
-    
-    
     $sportif_id = $_SESSION["usermpgine"];
 
 

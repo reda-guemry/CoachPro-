@@ -8,6 +8,7 @@
     $bookingId = $data['bookingId'] ;
 
     $delete = $connect->prepare("UPDATE bookings SET status = 'accepted' WHERE booking_id  = ?");
+    
     $delete->execute([$bookingId]);
 
     echo json_encode(["status" => "success", "message" => "Booking cancelled successfully"]);

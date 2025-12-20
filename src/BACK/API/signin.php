@@ -8,8 +8,6 @@
     $password = $_POST["password"]; 
     $confirmPassword = $_POST["confirmPassword"] ; 
     $role = $_POST["role"] ;
-    $certificate = $_POST["certificate"] ;
-    $cpecialiter = json_decode($_POST["cpecialiter"] , true ) ;
 
 
     if ($_POST["password"] !== $_POST["confirmPassword"]) {
@@ -26,6 +24,8 @@
     if($role == "coach") {
         $BioCoach = $_POST["BioCoach"] ; 
         $experiencecoach = $_POST["experiencecoach"] ; 
+        $certificate = $_POST["certificate"] ;
+        $cpecialiter = json_decode($_POST["cpecialiter"] , true ) ;
 
         $profilePhotoPath = '';
         if($_FILES["profilePhoto"]["error"] == 0 ){
