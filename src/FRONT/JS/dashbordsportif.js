@@ -5,14 +5,17 @@ window.logout = logout;
 
 verifyevrypage() ; 
 
-fetch("../../BACK/API/selectallcoaches.php")
-    .then(rep => rep.json())
-    .then(coaches => {
-        loadCoaches(coaches) ; 
-        loadStatscoach(coaches) ; 
-    })
-    .catch(error => console.error(error))
+function fetallcoash() {
+    fetch("../../BACK/API/selectallcoaches.php")
+        .then(rep => rep.json())
+        .then(coaches => {
+            loadCoaches(coaches) ; 
+            loadStatscoach(coaches) ; 
+        })
+        .catch(error => console.error(error))
 
+}
+fetallcoash() ; 
 
 function getallbooking() {
     fetch("../../BACK/API/allboking.php")
@@ -23,6 +26,20 @@ function getallbooking() {
         })
         .catch(error => console.error(error))
 }
+
+fetch("../../BACK/API/getallsportdisp.php")
+    .then(res => res.json())
+    .then(allSports => {
+        const sportifcheck = document.querySelector("#sportFilter");
+        sportifcheck.innerHTML = `
+            <option value="">Tous les sports</option>
+            ${allSports.map(ele => {
+                return `
+                    <option value="${ele.sport_id}">${ele.sport_name}</option>
+                `;
+            }).join('')}
+        `
+    });
  
 
 function loadStats(bookings) {
@@ -37,7 +54,6 @@ function loadStatscoach(coach) {
 
 // Load coaches
 function loadCoaches(filteredCoaches) {
-    
     coachsList.innerHTML = filteredCoaches.map(coach => `
         <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-600 transition duration-300">
             <div class="flex items-start space-x-4">
@@ -61,7 +77,6 @@ function loadCoaches(filteredCoaches) {
             </div>
         </div>
     `).join('');
-
 }
 
 // Lolt ad bookings
@@ -352,36 +367,40 @@ window.cancelBooking = cancelBooking ;
 // Search and filter
 document.getElementById('searchCoach').addEventListener('input', function(e) {
     const search = e.target.value.toLowerCase();
-    const filtered = coaches.filter(c => 
-        c.name.toLowerCase().includes(search) || 
-        c.sport.toLowerCase().includes(search)
-    );
+
+    const valuuecherch = new FormData();
+    valuuecherch.append("likethis", search);
+    if(search) {
+        fetch("../../BACK/API/cherchbyname.php" , {
+            method : "POST" , 
+            body : valuuecherch
+        })
+            .then(rep => rep.json())
+            .then(data => loadCoaches(data))
+            .catch(error => console.error(error))
+    }else{
+        fetallcoash() ; 
+    }
     
-    const coachsList = document.getElementById('coachsList');
-    coachsList.innerHTML = filtered.map(coach => `
-        <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-600 transition duration-300">
-            <div class="flex items-start space-x-4">
-                <img src="${coach.photo}" alt="${coach.name}" class="w-20 h-20 rounded-full object-cover">
-                <div class="flex-1">
-                    <h3 class="text-lg font-bold text-gray-800">${coach.name}</h3>
-                    <p class="text-sm text-gray-600"><i class="fas fa-trophy text-purple-600 mr-1"></i>${coach.sport}</p>
-                    <p class="text-sm text-gray-600"><i class="fas fa-certificate text-purple-600 mr-1"></i>${coach.certifications}</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                        <span class="text-sm font-semibold">${coach.rating}</span>
-                        <span class="text-sm text-gray-500 ml-2">${coach.experience} ans d'exp.</span>
-                    </div>
-                </div>
-                <button onclick="openBookingModal(${coach.id}, '${coach.name}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
-                    <i class="fas fa-calendar-plus mr-1"></i>Réserver
-                </button>
-            </div>
-        </div>
-    `).join('');
 });
 
-document.getElementById('sportFilter').addEventListener('change', function() {
-    loadCoaches(this.value);
+document.getElementById('sportFilter').addEventListener('change', function(e) {
+    console.log(e.target.value)
+    const sportidselect = e.target.value;
+
+    const sportselected = new FormData();
+    sportselected.append("sportselect", sportidselect);
+    if(sportidselect) {
+        fetch("../../BACK/API/selectbysport.php" , {
+            method : "POST" , 
+            body : sportselected
+        })
+            .then(rep => rep.json())
+            .then(data => loadCoaches(data))
+            .catch(error => console.error(error))
+    }else{
+        fetallcoash() ; 
+    }
 });
 
 

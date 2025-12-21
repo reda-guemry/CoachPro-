@@ -14,6 +14,7 @@ function getcoashdata() {
             document.getElementById('bio').value = data.bio ;
             document.getElementById('experienceYears').value = data.experience_year ;
             document.getElementById('certifications').value = data.certification ;
+            document.getElementById('annerdexperience').textContent = data.experience_year ;
 
             if (data.photo) {
                 document.getElementById('profilePhoto').src = data.photo;
@@ -44,6 +45,15 @@ function getcoashdata() {
         .catch(error => console.log(error))
 }
 getcoashdata()
+
+fetch("../../BACK/API/statiquerpofile.php") 
+    .then(rep => rep.json())
+    .then(data => {
+        document.getElementById("seansereserver").textContent = data.allboking ? data.allboking : 0 ; 
+        document.getElementById("ratmoyenne").textContent = data.allboking ? parseFloat(data.getavrage).toFixed(1) : 0.0 ; 
+    })
+    .catch(error => console.error(error))
+
 
 const bioTextarea = document.getElementById('bio');
 const bioCount = document.getElementById('bioCount');
